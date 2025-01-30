@@ -23,15 +23,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header>
+        <header className="sticky top-0 z-50">
           <Navber />
-          <div className="mt-20">
-            <Navberdebug />
-          </div>
+          <Navberdebug />
         </header>
-        <main className="w-full h-screen px-8 md:px-20 mx-auto py-4 mb-20">
-          {children}
-        </main>
+        <main className="relative px-5 sm:px-8 py-3">{children}</main>
         <footer className="fixed bottom-0 bg-danger text-white flex justify-center items-center w-full shadow-lg">
           Debug Mode
         </footer>

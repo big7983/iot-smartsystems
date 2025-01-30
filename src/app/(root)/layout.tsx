@@ -22,10 +22,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header className="mb-20">
+        <header className="sticky top-0 z-50">
           <Navber />
         </header>
-        <main className="px-8 md:px-20 mx-auto py-4">{children}</main>
+        <main className="relative px-4 py-4 sm:px-8 sm:py-8">{children}</main>
       </body>
     </html>
   );
