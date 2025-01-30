@@ -1,9 +1,6 @@
 # ใช้ Node.js เวอร์ชัน 18 เป็นเบสอิมเมจ
 FROM node:22
 
-# กำหนดไดเรกทอรีทำงานในคอนเทนเนอร์
-WORKDIR /app
-
 # คัดลอกไฟล์ package.json และ package-lock.json ไปยังไดเรกทอรีทำงาน
 COPY package*.json ./
 
