@@ -54,7 +54,7 @@ jobs:
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker build . --file Dockerfile --tag big7983/iot-smartsystem:${{ env.tag }}
+        run: docker build . --file DockerFile --tag big7983/iot-smartsystem:${{ env.tag }}
 
       - name: Push to Docker Hub
         run: docker push big7983/iot-smartsystem:${{ env.tag }}
