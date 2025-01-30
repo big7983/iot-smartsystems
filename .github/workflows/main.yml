@@ -27,8 +27,8 @@ jobs:
       - name: Dependecies
         run: npm ci
       
-      - name: Dev
-        run: npm run dev
+      - name: Build
+        run: npm run build
         
       - name: Save version
         id: version
