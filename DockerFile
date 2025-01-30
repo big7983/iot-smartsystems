@@ -29,4 +29,4 @@ COPY --from=builder /app/public ./public
 EXPOSE 3000
 
 # กำหนดคำสั่งเริ่มต้นเมื่อ container เริ่มทำงาน
-CMD ["npm", "start"]
+CMD ["npm", "npm start"]
