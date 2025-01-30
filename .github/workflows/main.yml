@@ -46,7 +46,7 @@ jobs:
 
       - name: Push new version
         run: |
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+          git push https://github.com/big7983/iot-smartsystems.git
         env:
           GH_PAT: ${{ secrets.GH_PAT }}  # ✅ ใช้ Personal Access Token (PAT) เพื่อให้ push ได้
 
