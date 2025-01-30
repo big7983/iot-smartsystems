@@ -7,44 +7,54 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: write  # ✅ ให้สิทธิ์ push
+
 jobs:
   Docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4  # ✅ ใช้ v4 ล่าสุด
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-      
-      - name: setup git config
+          node-version: 22  # ✅ ใช้เวอร์ชัน LTS แทน Node.js 22
+          cache: "npm"
+
+      - name: Setup Git Config
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install Dependencies
+        run: npm ci
 
       - name: axios
-        run: npm install axios
-      
-      - name: Dependecies
-        run: npm ci
-      
-      - name: Dev
-        run: npm run dev
-        
+        run: npm i axios
+
+      - name: Build Project
+        run: npm run build
+
       - name: Save version
         id: version
-        run: echo ::set-output name=tag::$(echo $(node -p -e "require('./package.json').version"))
-        
+        run: echo "tag=$(node -p -e "require('./package.json').version")" >> $GITHUB_ENV  # ✅ ใช้วิธีใหม่
+
       - name: Increase version
         run: npm version patch
-        
+
       - name: Push new version
-        run: git push
-      
+        run: |
+          git push https://github.com/big7983/iot-smartsystems.git
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}  # ✅ ใช้ Personal Access Token (PAT) เพื่อให้ push ได้
+
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        
+
       - name: Build Docker image
-        run: docker build . --file Dockerfile --tag ziermann/tut:${{steps.version.outputs.tag}}
-        
+        run: docker build . --file Dockerfile --tag big7983/iot-smartsystem:${{ env.tag }}
+
       - name: Push to Docker Hub
-        run: docker push ziermann/tut:${{steps.version.outputs.tag}}
+        run: docker push big7983/iot-smartsystem:${{ env.tag }}
