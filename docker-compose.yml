@@ -1,14 +1,13 @@
 services:
   nextjs-app:
-    image: nextjs-app
     container_name: nextjs-app
     build:
       context: .
     ports:
-      - 4200:4200
-    volumes:
-      - .:/app
-      - /app/node_modules 
-
-volumes:
-  node_modules:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env  # ใช้ไฟล์ .env
+    environment:
+      - NODE_ENV=production
+      - APP_PORT=${APP_PORT}
+    restart: always
