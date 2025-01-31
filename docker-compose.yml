@@ -4,10 +4,8 @@ services:
     build:
       context: .
     ports:
-      - "${APP_PORT}:${APP_PORT}"
-    env_file:
-      - .env  # ใช้ไฟล์ .env
-    environment:
-      - NODE_ENV=production
-      - APP_PORT=${APP_PORT}
-    restart: always
+      - 4200:4200
+
+
+volumes:
+  node_modules:
