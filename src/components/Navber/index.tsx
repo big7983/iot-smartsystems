@@ -19,10 +19,6 @@ const menuGroups = [
 
 const menuadminGroups = [
   {
-    label: "จัดการห้อง",
-    route: "/roommanage",
-  },
-  {
     label: "จัดการสิทธิ์ผู้ใช้",
     route: "/usermanage",
   },
