@@ -7,8 +7,11 @@ services:
     ports:
       - '4200:4200'
     volumes:
-      - ./:/app
       - node_modules:/node_modules 
+      - build:/.next 
+    command: >
+      sh -c "yarn build && yarn start -p 4200"
 
 volumes:
   node_modules:
+  build:
