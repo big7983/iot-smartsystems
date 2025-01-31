@@ -1,39 +1,39 @@
-# ใช้ Node.js base image สำหรับ build
-FROM node:22 AS build-stage
+# ใช้ Node.js base image เวอร์ชันล่าสุด
+FROM node:22 AS builder
 
 # ตั้งค่า working directory
 WORKDIR /app
 
-# คัดลอก package.json และ lock file เพื่อติดตั้ง dependencies ก่อน
+# คัดลอก package.json และ lock file มาติดตั้ง dependencies
 COPY package.json package-lock.json ./
 
-# ติดตั้ง dependencies
-RUN npm install
+# ติดตั้ง dependencies (เฉพาะที่จำเป็นสำหรับ production)
+RUN npm install --only=production
 
-# คัดลอกไฟล์ทั้งหมดเข้า container
+# คัดลอกโค้ดทั้งหมดเข้า container
 COPY . .
 
-# สร้างไฟล์ build ของ Next.js
+# สร้าง production build
 RUN npm run build
 
-# -- Production Stage --
-FROM node:22 AS production-stage
+# ---- Production Image ----
+FROM node:22 AS runner
 
-# กำหนด working directory
 WORKDIR /app
 
-# คัดลอกไฟล์ที่จำเป็นจาก build-stage
-COPY --from=build-stage /app/package.json ./
-COPY --from=build-stage /app/package-lock.json ./
-COPY --from=build-stage /app/.next ./.next
-COPY --from=build-stage /app/public ./public
-COPY --from=build-stage /app/node_modules ./node_modules
+# คัดลอกไฟล์ที่จำเป็นจาก builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
 
-# กำหนดค่า Environment Variables
+# กำหนด Environment Variables
+ENV NODE_ENV=production
 ENV PORT=4200
 
-# เปิดพอร์ตที่ใช้
+# เปิดพอร์ต
 EXPOSE 4200
 
-# คำสั่งเริ่มต้น
+# คำสั่งเริ่มต้นเมื่อ container เริ่มทำงาน
 CMD ["npm", "start"]
