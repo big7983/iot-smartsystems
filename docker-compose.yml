@@ -7,14 +7,10 @@ services:
     build:
       context: .
     ports:
-      - '${APP_PORT}:${APP_PORT}'
+      - 4200:4200
     volumes:
       - .:/app
-      - /app/node_modules # managed by docker. Restrict local yarn to get access
-      - build:/.next # managed by docker. Restrict local yarn to get access
-    env_file:
-      - .env
-
+      - /app/node_modules 
 
 volumes:
   node_modules:
