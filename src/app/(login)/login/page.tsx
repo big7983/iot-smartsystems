@@ -51,7 +51,7 @@ export default function Page() {
       <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[395px] mx-5 sm:mx-0 ">
         <div className="flex flex-col items-center">
           <Image
-          className="mb-7"
+            className="mb-7"
             src="/CE_logo_black_no.png"
             alt="KMITL Computer Engineering"
             width={275}
@@ -114,6 +114,7 @@ export default function Page() {
               className="text-base  w-full border border-gray-300 py-2 px-4 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
             >
               <Image
+                className="mr-2"
                 src="/google_logo.png"
                 alt="Google Logo"
                 width={18}

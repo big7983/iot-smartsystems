@@ -5,7 +5,10 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value || "";
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/public") || pathname === "/favicon.ico") {
+  console.log("Requested Path:", pathname); // Debugging
+
+
+  if (pathname.startsWith("/CE_logo_black_no.png") || pathname.startsWith("/google_logo.png") || pathname.startsWith("/Microsoft_icon.png")) {
     return NextResponse.next(); 
   }
 
