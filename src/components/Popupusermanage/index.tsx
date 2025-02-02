@@ -9,7 +9,7 @@ interface PopupusermanageProps {
   onClose: () => void;
 }
 
-export default function index({ idstu, onClose }: PopupusermanageProps) {
+export default function Index({ idstu, onClose }: PopupusermanageProps) {
   const [selectedOption, setSelectedOption] = useState<string>("");
 
   return (
