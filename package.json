@@ -1,23 +1,34 @@
 {
   "name": "iot-smartsystems",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4200",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 4200",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.2",
+    "@mui/x-data-grid": "^7.25.0",
     "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
     "flatpickr": "^4.6.13",
+    "jose": "^5.9.6",
+    "js-cookie": "^3.0.5",
     "next": "15.1.4",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
+    "react-datepicker": "^8.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

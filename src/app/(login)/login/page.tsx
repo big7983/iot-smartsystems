@@ -1,17 +1,62 @@
-import React from "react";
-import Image from "next/image";
+"use client";
 
-export default function page() {
+import React, { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { generateToken } from "@/lib/jwt";
+
+const mockUsers = [
+  { email: "user@user.com", password: "123456", role: 2 },
+  { email: "admin@admin.com", password: "123456", role: 1 },
+];
+
+export default function Page() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const user = mockUsers.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!user) {
+      alert("Invalid credentials");
+      return;
+    }
+
+    try {
+      // ✅ ใช้ await เพื่อรอให้ token ถูกสร้างก่อนใช้งาน
+      const token = await generateToken({ email: user.email, role: user.role });
+
+      // ✅ ตรวจสอบว่ามี token ก่อนบันทึกลง Cookies
+      if (token) {
+        Cookies.set("token", token);
+        alert("Login successful!");
+        router.push("/"); // ✅ เปลี่ยนหน้าไปที่ "/"
+      } else {
+        alert("Failed to generate token");
+      }
+    } catch (error) {
+      console.error("Error generating token:", error);
+      alert("An error occurred");
+    }
+  };
+
   return (
     <div className="bg-primary flex items-center justify-center min-h-screen">
-      <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[280px] sm:max-w-[400px] ">
+      <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[395px] mx-5 sm:mx-0 ">
         <div className="flex flex-col items-center">
           <Image
-            className="mb-5 w-52 sm:w-64 "
-            src="\CE logo black no bg.png"
+            src="/CE_logo_black_no.png"
             alt="KMITL Computer Engineering"
+            width={275}
+            height={100}
           />
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleLogin}>
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -23,6 +68,8 @@ export default function page() {
                 className="mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-blue-500 focus:ring-blue-500 border-2 py-[6.5px] pl-5"
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your e-mail"
               />
             </div>
@@ -37,7 +84,8 @@ export default function page() {
                 <input
                   className=" mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-blue-500 focus:ring-blue-500 border-2 py-[6.5px] pl-5"
                   type="password"
-                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                 />
                 <button
@@ -46,15 +94,7 @@ export default function page() {
                 ></button>
               </div>
             </div>
-            <div className="flex items-center justify-between mb-6">
-              <label className="flex items-center text-sm text-gray-600">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 rounded border-gray-300"
-                />
-                <span className="ml-2 ">Remember me</span>
-              </label>
-            </div>
+
             <button
               type="submit"
               className="text-base  w-full bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary"
@@ -68,29 +108,32 @@ export default function page() {
             </div>
           </form>
           <div className="w-full flex flex-col gap-4">
-          <button
-            type="button"
-            className="text-base  w-full border border-gray-300 py-2 px-4 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
-          >
-            <Image
-              src="/google logo.png"
-              alt="Google Logo"
-              className="w-5 h-5 mr-2"
-            />
-            Sign in with Google
-          </button>
-          <button
-            type="button"
-            className="text-base w-full border border-gray-300 py-2 px-4 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
-          >
-            <Image
-              src="/Microsoft_icon.svg.png"
-              alt="Microsoft Logo"
-              className="w-5 h-5 mr-2"
-            />
-            Sign in with Microsoft
-          </button>
-        </div>
+            <button
+              type="button"
+              className="text-base  w-full border border-gray-300 py-2 px-4 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
+            >
+              <Image
+                src="/google_logo.png"
+                alt="Google Logo"
+                width={18}
+                height={18}
+              />
+              Sign in with Google
+            </button>
+            <button
+              type="button"
+              className="text-base w-full border border-gray-300 py-2 px-4 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
+            >
+              <Image
+                className="mr-2"
+                src="/Microsoft_icon.png"
+                alt="Microsoft Logo"
+                width={18}
+                height={18}
+              />
+              Sign in with Microsoft
+            </button>
+          </div>
         </div>
       </div>
     </div>
