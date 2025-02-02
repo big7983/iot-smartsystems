@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const role = 1;
+import { verifyToken } from "@/lib/jwt";
+import Cookies from "js-cookie";
 
 const mockDataadmin = [
   {
@@ -85,6 +85,8 @@ const mockDatauser = [
 export default function Page() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [searchText, setSearchText] = useState<string>("");
+  const [role, setRole] = useState<any>(1);
+
 
 
   const columnsadmin: GridColDef[] = [
@@ -147,6 +149,23 @@ export default function Page() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value.toLowerCase());
   };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    console.log("✅ Decoded JWT:", token);
+    if (token) {
+      verifyToken(token).then((decoded) => {
+        if (decoded) {
+          console.log("✅ Decoded JWT:", decoded); 
+          setRole(decoded.role);
+        } else {
+          console.log("❌ Invalid token");
+        }
+      });
+    } else {
+      console.log("❌ No JWT found in cookies");
+    }
+  }, []); 
 
   return (
     <div className="flex justify-center w-full ">

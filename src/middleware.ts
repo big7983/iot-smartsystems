@@ -5,6 +5,10 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value || "";
   const { pathname } = req.nextUrl;
 
+  if (pathname.startsWith("/public") || pathname === "/favicon.ico") {
+    return NextResponse.next(); 
+  }
+
   if (!token && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -12,7 +16,6 @@ export function middleware(req: NextRequest) {
   if (token && pathname === "/login") {
     return NextResponse.redirect(new URL("/", req.url));
   }
-
 }
 
 export const config = {
