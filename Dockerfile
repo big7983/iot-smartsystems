@@ -16,8 +16,5 @@ COPY . .
 # สร้างโปรเจค (build Next.js)
 RUN npm run build
 
-# เปิด port 3000 (Next.js ใช้ 3000 ไม่ใช่ 4200)
-EXPOSE 4200
-
 # เริ่มรันแอป (Next.js ใช้ `next start` แทน `npm start`)
 CMD ["npm", "run", "start"]
