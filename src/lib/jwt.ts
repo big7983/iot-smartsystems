@@ -1,9 +1,10 @@
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
 
-const secretKey = new TextEncoder().encode("big7983");
-
 // ✅ สร้าง JWT
 export async function generateToken(payload: JWTPayload) {
+  const secret = process.env.SECRET_KEY;
+  const secretKey = new TextEncoder().encode("246cf1eea930796569d31ea89beaad1ae889e5604a7552b24e90ef78bc9e3446");
+
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .sign(secretKey);
@@ -11,8 +12,11 @@ export async function generateToken(payload: JWTPayload) {
 
 // ✅ ตรวจสอบ JWT
 export async function verifyToken(token: string) {
+  const secret = process.env.SECRET_KEY;
+  const secretKeyen = new TextEncoder().encode("246cf1eea930796569d31ea89beaad1ae889e5604a7552b24e90ef78bc9e3446");
+
   try {
-    const { payload } = await jwtVerify(token, secretKey);
+    const { payload } = await jwtVerify(token, secretKeyen);
     return payload;
   } catch (err) {
     console.error("JWT verification failed:", err);
