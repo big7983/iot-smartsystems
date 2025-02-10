@@ -3,16 +3,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { verifyToken } from "@/lib/jwt";
-import { jwtVerify } from "jose";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [jwtToken, setJwtToken] = useState("");
   const [encode, setEncode] = useState<any>();
-  const secretKey = new TextEncoder().encode(
-    "246cf1eea930796569d31ea89beaad1ae889e5604a7552b24e90ef78bc9e3446"
-  );
+
 
   const handleLogin = async () => {
     try {
