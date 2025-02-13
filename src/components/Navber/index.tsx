@@ -28,10 +28,6 @@ const menuadminGroups = [
     label: "จัดการสิทธิ์ผู้ใช้",
     route: "/usermanage",
   },
-  {
-    label: "DebugPage",
-    route: "/debugpage",
-  },
 ];
 
 export default function Nevber() {

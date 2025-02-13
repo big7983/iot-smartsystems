@@ -71,7 +71,7 @@ export default function Manageroom({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="bg-white grid grid-cols-1 sm:grid-cols-2 gap-5">
       {filteredRooms.length > 0 ? (
         filteredRooms.map((room) => (
           <div

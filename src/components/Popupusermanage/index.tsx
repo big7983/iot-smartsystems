@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Inputusermanage from "@/components/Inputs";
+import Selects from "@/components/Selects";
 import { MdOutlineCancel } from "react-icons/md";
 
 interface PopupusermanageProps {
@@ -41,10 +42,28 @@ export default function Index({ idstu, onClose }: PopupusermanageProps) {
               <Inputusermanage title="นามสกุล" />
               <Inputusermanage title="อีเมลสถาบัน" />
               <Inputusermanage title="LineID" />
-              <Inputusermanage title="ตำแหน่ง" />
+              <Selects
+                title="ตำแหน่ง"
+                options={["อาจารย์", "นักศึกษา", "บุคลากร", "Your Mom"]}
+              />
               <Inputusermanage title="เบอร์โทร" />
-              <Inputusermanage title="วันเดือนปีที่เกิด" />
-              <Inputusermanage title="กรุ๊ปเลือด" />
+              <div>
+                <label className="text-sm text-black block mb-1">
+                  วันเดือนปีเกิด
+                </label>
+                <input
+                  type="date"
+                  // value={selectedStudent.Birthdate}
+                  // onChange={(e) =>
+                  //   setSelectedStudent({
+                  //     ...selectedStudent,
+                  //     Birthdate: e.target.value,
+                  //   })
+                  // }
+                  className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+                />
+              </div>
+              <Selects title="กรุ๊ปเลือด" options={["A", "B", "AB", "O"]} />
             </div>
           </div>
           <div className="border-b border-stroke ">
@@ -57,21 +76,24 @@ export default function Index({ idstu, onClose }: PopupusermanageProps) {
           <div className="border-b border-stroke ">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
               <div>
-              <label className="text-black block mb-1">บทบาทในเว็บไซต์</label>
-              <select
-                value={selectedOption}
-                onChange={(e) => {
-                  setSelectedOption(e.target.value);
-                }}
-                className={`w-full rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary`}
-              >
-                <option value="user" className="text-body dark:text-bodydark">
-                  user
-                </option>
-                <option value="admin" className="text-body dark:text-bodydark">
-                  admin
-                </option>
-              </select>
+                <label className="text-black block mb-1">บทบาทในเว็บไซต์</label>
+                <select
+                  value={selectedOption}
+                  onChange={(e) => {
+                    setSelectedOption(e.target.value);
+                  }}
+                  className={`w-full rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary`}
+                >
+                  <option value="user" className="text-body dark:text-bodydark">
+                    user
+                  </option>
+                  <option
+                    value="admin"
+                    className="text-body dark:text-bodydark"
+                  >
+                    admin
+                  </option>
+                </select>
               </div>
             </div>
           </div>
