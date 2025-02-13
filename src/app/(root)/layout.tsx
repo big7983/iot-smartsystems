@@ -25,7 +25,7 @@ export default function RootLayout({
         <header className="sticky top-0 z-50">
           <Navber />
         </header>
-        <main className="relative px-4 py-4 sm:px-8 sm:py-8">{children}</main>
+        <main className="bg-slate-50 relative px-4 py-4 sm:px-8 sm:py-8">{children}</main>
       </body>
     </html>
   );

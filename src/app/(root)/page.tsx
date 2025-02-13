@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <div className="flex justify-center w-full ">
       <div className="flex flex-col justify-center max-w-[900px] w-full">
-        <div className="flex flex-col gap-2 justify-center  shadow-xl rounded-2xl border border-gray-100 p-5 sm:p-12 mb-10 ">
+        <div className="flex flex-col gap-2 justify-center shadow-xl rounded-2xl border border-gray-100 bg-white p-5 sm:p-12 mb-10 ">
           <ul className=" grid grid-cols-3 md:grid-cols-6 gap-5 mb-5 text-center">
             {menuItems.map((menu) => (
               <li
