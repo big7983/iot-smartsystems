@@ -8,6 +8,7 @@ export default function Nevber() {
   const [pages] = useState([
     { page: "profiletest", route: "/profiletest" },
     { page: "logindebug", route: "/logindebug" },
+    { page: "mqttdebug", route: "/mqttdebug" },
   ]);
 
   const pathname = usePathname();
