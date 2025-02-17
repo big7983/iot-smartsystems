@@ -4,6 +4,8 @@ import Manageroom from "@/components/Listroom/Manageroom";
 import Room from "@/components/Listroom/Room";
 import { verifyToken } from "@/lib/jwt";
 import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode"; 
+
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -29,22 +31,26 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token:any = Cookies.get("token");
     console.log("✅ Decoded JWT:", token);
-    if (token) {
-      verifyToken(token).then((decoded) => {
-        if (decoded) {
-          console.log("✅ Decoded JWT:", decoded); 
-          setRole(decoded.role);
-        } else {
-          console.log("❌ Invalid token");
-        }
-      });
-    } else {
-      console.log("❌ No JWT found in cookies");
-    }
-  }, []); 
 
+    const decoded:any = jwtDecode(token); 
+    setRole(decoded.role);
+    console.log("✅ Decoded JWT2:", decoded);
+
+    // if (token) {
+    //   verifyToken(token).then((decoded) => {
+    //     if (decoded) {
+    //       console.log("✅ Decoded JWT:", decoded); 
+    //       setRole(decoded.role);
+    //     } else {
+    //       console.log("❌ Invalid token");
+    //     }
+    //   });
+    // } else {
+    //   console.log("❌ No JWT found in cookies");
+    // }
+  }, []); 
 
   return (
     <div className="flex justify-center w-full ">

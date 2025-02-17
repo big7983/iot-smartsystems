@@ -18,6 +18,8 @@
     "flatpickr": "^4.6.13",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mqtt": "^5.10.3",
     "next": "15.1.4",
     "next-auth": "^4.24.11",

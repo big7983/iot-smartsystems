@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { verifyToken } from "@/lib/jwt";
+import jwt from "jsonwebtoken";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -24,7 +25,9 @@ export default function LoginPage() {
       setJwtToken(response.data.access_token);
       console.log("Jwt : ", response.data.access_token);
 
-      const payload = await verifyToken(response.data.access_token)
+      //const payload = await verifyToken(response.data.access_token)
+      const payload = jwt.decode(response.data.access_token);
+
 
       setEncode(payload);
       console.log("verifyToken : ", payload);

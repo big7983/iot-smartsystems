@@ -20,12 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-slate-50`}
       >
         <header className="sticky top-0 z-50">
           <Navber />
         </header>
-        <main className="bg-slate-50 relative px-4 py-4 sm:px-8 sm:py-8">{children}</main>
+        <main className=" relative px-4 py-4 sm:px-8 sm:py-8">{children}</main>
       </body>
     </html>
   );
