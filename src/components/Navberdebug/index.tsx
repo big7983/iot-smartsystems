@@ -9,6 +9,8 @@ export default function Nevber() {
     { page: "profiletest", route: "/profiletest" },
     { page: "logindebug", route: "/logindebug" },
     { page: "mqttdebug", route: "/mqttdebug" },
+    { page: "getapisucceed", route: "/getapisucceed" },
+    { page: "getapierror", route: "/getapierror" },
   ]);
 
   const pathname = usePathname();

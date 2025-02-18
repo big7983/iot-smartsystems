@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { PiSignOut } from "react-icons/pi";
-import { verifyToken } from "@/lib/jwt";
+import { jwtDecode } from "jwt-decode";
 
 const menuGroups = [
   {
@@ -40,25 +40,17 @@ export default function Nevber() {
   const router = useRouter();
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    Cookies.remove("Login");
     router.push("/login");
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token:any = sessionStorage.getItem("token");
     console.log("✅ Decoded JWT:", token);
-    if (token) {
-      verifyToken(token).then((decoded) => {
-        if (decoded) {
-          console.log("✅ Decoded JWT:", decoded);
-          setRole(decoded.role);
-        } else {
-          console.log("❌ Invalid token");
-        }
-      });
-    } else {
-      console.log("❌ No JWT found in cookies");
-    }
+
+    const decoded:any = jwtDecode(token); 
+    setRole(decoded.role);
+    console.log("✅ Decoded JWT2:", decoded);
   }, []);
 
   return (
@@ -92,7 +84,7 @@ export default function Nevber() {
                 </Link>
               </li>
             ))}
-            {role == 1 &&
+            {role == "admin" &&
               menuadminGroups.map((group, groupIndex) => (
                 <li className="snap-start inline-flex" key={groupIndex}>
                   <Link
@@ -135,7 +127,7 @@ export default function Nevber() {
               </Link>
             </li>
           ))}
-          {role == 1 &&
+          {role == "admin" &&
             menuadminGroups.map((group, groupIndex) => (
               <li className="snap-start inline-flex" key={groupIndex}>
                 <Link

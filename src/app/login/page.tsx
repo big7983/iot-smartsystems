@@ -4,48 +4,42 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios";
 import Cookies from "js-cookie";
-import { generateToken } from "@/lib/jwt";
 
-const mockUsers = [
-  { email: "user@user.com", password: "123456", role: 2 },
-  { email: "admin@admin.com", password: "123456", role: 1 },
-];
+// const mockUsers = [
+//   { email: "user@user.com", password: "123456", role: 2 },
+//   { email: "admin@admin.com", password: "123456", role: 1 },
+// ];
 
 export default function Page() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("big7983");
+  const [password, setPassword] = useState("big7983");
+  const [jwtToken, setJwtToken] = useState("");
+  const [encode, setEncode] = useState<any>();
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const user = mockUsers.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (!user) {
-      alert("Invalid credentials");
-      return;
-    }
-
     try {
-      // ✅ ใช้ await เพื่อรอให้ token ถูกสร้างก่อนใช้งาน
-      const token = await generateToken({ email: user.email, role: user.role });
-
-      // ✅ ตรวจสอบว่ามี token ก่อนบันทึกลง Cookies
-      if (token) {
-        Cookies.set("token", token);
-        alert("Login successful!");
-        router.push("/"); // ✅ เปลี่ยนหน้าไปที่ "/"
-      } else {
-        alert("Failed to generate token");
-      }
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        {
+          username,
+          password,
+        }
+      );
+      sessionStorage.setItem("token", response.data.access_token);
+      Cookies.set("Login", "1");
+      alert("Login successful!");
+      router.push("/");       
     } catch (error) {
-      console.error("Error generating token:", error);
+      console.error("Login Failed", error);
       alert("An error occurred");
     }
   };
+
+
 
   return (
     <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[395px] mx-5 sm:mx-0">
@@ -65,8 +59,8 @@ export default function Page() {
             <input
               className="mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-blue-500 focus:ring-blue-500 border-2 py-[6.5px] pl-5"
               type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your Username"
             />
           </div>
@@ -108,7 +102,7 @@ export default function Page() {
           className="w-full text-base bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary"
           href="/register"
         >
-          <button className="w-full text-center">Regiter</button>
+          <button className="w-full text-center">Register</button>
         </Link>
       </div>
     </div>

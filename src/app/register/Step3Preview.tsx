@@ -1,22 +1,20 @@
-import React from "react";
-
+// Step3.tsx
 interface Step3Props {
   formData: any;
-  prevStep: () => void;
 }
 
-const Step3Preview: React.FC<Step3Props> = ({ formData, prevStep }) => {
+const Step3 = ({ formData }: Step3Props) => {
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">พรีวิวข้อมูล</h2>
-      <pre className="p-4 bg-gray-100 rounded">{JSON.stringify(formData, null, 2)}</pre>
-
-      <div className="flex justify-between mt-4">
-        <button className="btn-secondary" onClick={prevStep}>ย้อนกลับ</button>
-        <button className="btn-success">ยืนยัน</button>
+      <h3 className="text-xl font-semibold mb-4">Preview</h3>
+      <div className="mb-4">
+        <p className="font-medium">Username: {formData.username}</p>
+        <p className="font-medium">Email: {formData.email}</p>
+        <p className="font-medium">Full Name: {formData.first_name} {formData.last_name}</p>
+        {/* Add more preview fields here */}
       </div>
     </div>
   );
 };
 
-export default Step3Preview;
+export default Step3;

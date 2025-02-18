@@ -1,4 +1,4 @@
-import ProfileInput from "@/components/ProfileInput";
+import ProfileInput from "@/components/Boxdata";
 import Selects from "@/components/Selects";
 import Image from "next/image";
 import React from "react";
@@ -38,17 +38,23 @@ export default function Page() {
             <ProfileInput title="First Name (ชื่อ)" />
             <ProfileInput title="Last Name (นามสกุล)" />
             <ProfileInput title="Nickname (ชื่อเล่น)" />
-            <Selects
+            <ProfileInput title="Position (ตำแหน่ง)" />
+
+            {/* <Selects
               title="Position (ตำแหน่ง)"
               options={["อาจารย์", "นักศึกษา", "บุคลากร"]}
-            />
+            /> */}
+
             <ProfileInput title="Date of birth (วันเดือนปีที่เกิด)" />
             <ProfileInput title="LineID (ไอดีไลน์)" />
             <ProfileInput title="Phone Number (เบอร์โทร)" />
-            <Selects
+            <ProfileInput title="Blood Type (กรุ๊ปเลือด)" />
+
+            {/* <Selects
               title="Blood Type (กรุ๊ปเลือด)"
               options={["A", "B", "AB", "O"]}
-            />
+            /> */}
+
           </div>
         </div>
 

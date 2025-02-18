@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const token:any = Cookies.get("token");
+    const token:any = sessionStorage.getItem("token");
     console.log("✅ Decoded JWT:", token);
 
     const decoded:any = jwtDecode(token); 
@@ -85,7 +85,7 @@ export default function Home() {
               <option value="" className="text-body ">
                 ทั้งหมด
               </option>
-              {role === 1 ? (
+              {role == "admin" ? (
                 <>
                   <option value="true" className="text-body">
                     ห้องที่เปิด
@@ -114,7 +114,7 @@ export default function Home() {
             />
           </div>
         </div>
-        {role === 1 ? (
+        {role == "admin" ? (
           <Manageroom
             selectbuilding={selectbuilding}
             selectedOption={selectedOption}

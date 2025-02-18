@@ -1,21 +1,51 @@
-import React from "react";
+import { useState } from "react";
 
+// Step1.tsx
 interface Step1Props {
   formData: any;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  nextStep: () => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Step1Login: React.FC<Step1Props> = ({ formData, handleChange, nextStep }) => {
+const Step1 = ({ formData, handleInputChange }: Step1Props) => {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">ล็อกอิน</h2>
-      <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} className="input-field" />
-      <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="input-field" />
-      <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} className="input-field" />
-      <button className="btn-primary mt-4" onClick={nextStep}>ถัดไป</button>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Username</label>
+        <input
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleInputChange}
+          className="mt-2 p-2 w-full border rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          className="mt-2 p-2 w-full border rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleInputChange}
+          className="mt-2 p-2 w-full border rounded-md"
+        />
+      </div>
     </div>
   );
 };
 
-export default Step1Login;
+export default Step1;

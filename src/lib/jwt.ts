@@ -12,12 +12,14 @@ export async function generateToken(payload: JWTPayload) {
 }
 
 // ✅ ฟังก์ชันตรวจสอบ JWT
-export async function verifyToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, secretKey);
-    return payload;
-  } catch (err) {
-    console.error("JWT verification failed:", err);
-    return null;
-  }
-}
+// export async function verifyToken(token: string) {
+//   try {
+//     const { payload } = await jwtVerify(token, secretKey);
+//     return payload;
+//   } catch (err) {
+//     console.error("JWT verification failed:", err);
+//     return null;
+//   }
+// }
+
+

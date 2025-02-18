@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { verifyToken } from "@/lib/jwt";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const mockDataadmin = [
   {
@@ -87,8 +87,6 @@ export default function Page() {
   const [searchText, setSearchText] = useState<string>("");
   const [role, setRole] = useState<any>(1);
 
-
-
   const columnsadmin: GridColDef[] = [
     { field: "idstu", headerName: "รหัสนักศึกษา", width: 120 },
     {
@@ -134,10 +132,10 @@ export default function Page() {
     return data.filter((item) => {
       const dateMatch =
         !selectedDate ||
-        (new Date(item.dateenter).toLocaleDateString() ===
+        new Date(item.dateenter).toLocaleDateString() ===
           selectedDate.toLocaleDateString() ||
-          new Date(item.dateleave).toLocaleDateString() ===
-            selectedDate.toLocaleDateString());
+        new Date(item.dateleave).toLocaleDateString() ===
+          selectedDate.toLocaleDateString();
       const textMatch =
         item.name?.toLowerCase().includes(searchText) ||
         item.room?.toLowerCase().includes(searchText) ||
@@ -151,26 +149,20 @@ export default function Page() {
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token:any = sessionStorage.getItem("token");
     console.log("✅ Decoded JWT:", token);
-    if (token) {
-      verifyToken(token).then((decoded) => {
-        if (decoded) {
-          console.log("✅ Decoded JWT:", decoded); 
-          setRole(decoded.role);
-        } else {
-          console.log("❌ Invalid token");
-        }
-      });
-    } else {
-      console.log("❌ No JWT found in cookies");
-    }
-  }, []); 
+
+    const decoded: any = jwtDecode(token);
+    setRole(decoded.role);
+    console.log("✅ Decoded JWT2:", decoded);
+  }, []);
 
   return (
     <div className="flex justify-center w-full ">
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
-        <h3 className="text-black text-xl font-semibold mt-5 sm:mt-1">ประวัติเข้า/ออก ห้องเรียน</h3>
+        <h3 className="text-black text-xl font-semibold mt-5 sm:mt-1">
+          ประวัติเข้า/ออก ห้องเรียน
+        </h3>
         <div className=" flex flex-col sm:flex-row justify-between gap-5 ">
           <DatePicker
             selected={selectedDate}
@@ -188,8 +180,12 @@ export default function Page() {
           />
         </div>
         <DataGrid
-          rows={role == 1 ? filteredData(mockDataadmin) : filteredData(mockDatauser)}
-          columns={role == 1 ? columnsadmin : columnsuser}
+          rows={
+            role == "admin"
+              ? filteredData(mockDataadmin)
+              : filteredData(mockDatauser)
+          }
+          columns={role == "admin" ? columnsadmin : columnsuser}
           initialState={{
             pagination: {
               paginationModel: {
