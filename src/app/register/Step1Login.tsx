@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // Step1.tsx
 interface Step1Props {
   formData: any;
@@ -7,10 +5,6 @@ interface Step1Props {
 }
 
 const Step1 = ({ formData, handleInputChange }: Step1Props) => {
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <div>

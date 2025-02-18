@@ -11,6 +11,8 @@ export default function Nevber() {
     { page: "mqttdebug", route: "/mqttdebug" },
     { page: "getapisucceed", route: "/getapisucceed" },
     { page: "getapierror", route: "/getapierror" },
+    { page: "photoDebug", route: "/photoDebug" },
+
   ]);
 
   const pathname = usePathname();

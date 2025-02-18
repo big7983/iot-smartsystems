@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Inputusermanage from "@/components/Inputs";
+import Inputusermanage from "@/components/Boxdata";
 import { MdOutlineCancel } from "react-icons/md";
 
 interface PopupusermanageProps {

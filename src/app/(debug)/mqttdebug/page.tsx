@@ -5,16 +5,16 @@ import mqtt from "mqtt";
 
 export default function MqttComponent() {
   const [messages, setMessages] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("รักพ่อ");
   const topic = "big7983/test";
 
   useEffect(() => {
     // เชื่อมต่อกับ HiveMQ Broker
-    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt", {
+    const client = mqtt.connect("ws://192.168.70.8:9001/mqtt", {
       clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
-      username: "", // Public Broker ไม่ต้องใช้
-      password: "", // Public Broker ไม่ต้องใช้
-      reconnectPeriod: 1000, // Reconnect ทุก 1 วินาที
+      username: "admin", // Public Broker ไม่ต้องใช้
+      password: "P@ssw0rd", // Public Broker ไม่ต้องใช้
+      reconnectPeriod: 3000, // Reconnect ทุก 1 วินาที
     });
 
     client.on("connect", () => {
@@ -31,6 +31,7 @@ export default function MqttComponent() {
     client.on("message", (receivedTopic, payload) => {
       if (receivedTopic === topic) {
         setMessages((prev) => [...prev, payload.toString()]);
+        console.log("Payload : ",payload.toString())
       }
     });
 
@@ -44,7 +45,7 @@ export default function MqttComponent() {
   }, []);
 
   const sendMessage = () => {
-    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
+    const client = mqtt.connect("ws://192.168.70.8:9001/mqtt");
 
     client.on("connect", () => {
       client.publish(topic, message, {}, (err) => {

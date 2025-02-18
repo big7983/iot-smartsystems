@@ -72,17 +72,26 @@ export default function Page() {
   return (
     <div className="flex justify-center w-full ">
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
-        <h3 className="text-black text-xl font-semibold mt-5 sm:mt-1">
+        <h3 className="text-primary text-xl font-semibold mt-5 sm:mt-1">
           จัดการสิทธิ์ผู้ใช้
         </h3>
 
-        <input
-          type="text"
-          placeholder="ค้นหานักศึกษา (รหัส, ชื่อ, นามสกุล, อีเมล)"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-200 shadow rounded-2xl bg-white px-5 py-2 outline-none focus:border-gray-300  disabled:cursor-default"
-        />
+        <div className="flex flex-row justify-between gap-4">
+          <input
+            type="text"
+            placeholder="ค้นหานักศึกษา (รหัส, ชื่อ, นามสกุล, อีเมล)"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full max-w-[80%] border border-gray-200 shadow rounded-3xl bg-white px-5 py-2 outline-none focus:border-gray-300  disabled:cursor-default"
+          />
+          <button
+            className={`px-3 py-2 rounded-3xl text-white font text-[13px] whitespace-nowrap sm:text-sm 
+                      bg-success hover:shadow-xl hover:border-gray-300 hover:bg-green-900 transition-all
+                     `}
+          >
+            เพิ่มผู้ใช้ใหม่
+          </button>
+        </div>
         <div className="flex flex-col gap-5">
           {filteredStudents.length > 0 ? (
             filteredStudents.map((student) => (

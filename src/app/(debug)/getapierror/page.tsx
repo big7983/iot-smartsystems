@@ -17,10 +17,17 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://grand-readily-werewolf.ngrok-free.app/api/user_info', {
+        // const response = await axios.get('http://26.251.91.175:3000/api/user_info', {
+        //   headers: {
+        //     'Accept': 'application/json',
+        //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpZzc5ODMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzk4NjgzOTEsImV4cCI6MTczOTg3MTk5MX0.LERSPZe392SwTw-67yCXxB7vL-8IlrlS2MCKkER-Xy8',
+        //   },
+        // });
+        const token = sessionStorage.getItem("token");
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/user_info`, {
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpZzc5ODMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3Mzk4NDA1NjMsImV4cCI6MTczOTg0NDE2M30.vpe7mAcHXaypuvC2sj1NQos9Aj2KAoTnJQf0jDaNMS8',
+            'Authorization': `Bearer ${token}`,
           },
         });
         setData(response.data);

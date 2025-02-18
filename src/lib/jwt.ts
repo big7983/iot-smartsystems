@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify, JWTPayload } from "jose";
+import { SignJWT, JWTPayload } from "jose";
 import * as crypto from "crypto";
 
 // สร้าง Secret Key เป็น Buffer

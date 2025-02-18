@@ -34,7 +34,7 @@ export default function Room({ selectbuilding, selectedOption, searchQuery }: Ro
             <span className="text-base">{room.id}</span>
             <div className="flex flex-row justify-between items-center gap-2">
               <span className={`w-3 h-3 rounded-full ${room.status === "available" ? "bg-success" : "bg-danger"}`}></span>
-              <span className="text-sm">{room.status === "available" ? "ว่าง" : "กำลังใช้งาน"}</span>
+              <span className="text-sm">{room.status === "available" ? "เปิดใช้งาน" : "ปิดใช้งาน"}</span>
             </div>
           </div>
         

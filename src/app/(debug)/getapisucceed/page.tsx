@@ -2,11 +2,6 @@
 
 import React from "react";
 
-interface UserInfo {
-  username: string;
-  role: string;
-}
-
 const Home = async () => {
     
   try {

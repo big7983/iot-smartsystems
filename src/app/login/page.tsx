@@ -15,8 +15,6 @@ import Cookies from "js-cookie";
 export default function Page() {
   const [username, setUsername] = useState("big7983");
   const [password, setPassword] = useState("big7983");
-  const [jwtToken, setJwtToken] = useState("");
-  const [encode, setEncode] = useState<any>();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {

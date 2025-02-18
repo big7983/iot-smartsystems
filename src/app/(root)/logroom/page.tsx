@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 const mockDataadmin = [
@@ -160,7 +159,7 @@ export default function Page() {
   return (
     <div className="flex justify-center w-full ">
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
-        <h3 className="text-black text-xl font-semibold mt-5 sm:mt-1">
+        <h3 className="text-primary text-xl font-semibold mt-5 sm:mt-1">
           ประวัติเข้า/ออก ห้องเรียน
         </h3>
         <div className=" flex flex-col sm:flex-row justify-between gap-5 ">
