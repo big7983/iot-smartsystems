@@ -6,7 +6,7 @@ import mqtt from "mqtt";
 export default function MqttComponent() {
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState("รักพ่อ");
-  const topic = "big7983/test";
+  const topic = "DoorIn1";
 
   useEffect(() => {
     // เชื่อมต่อกับ HiveMQ Broker

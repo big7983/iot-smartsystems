@@ -12,6 +12,8 @@ export default function Nevber() {
     { page: "getapisucceed", route: "/getapisucceed" },
     { page: "getapierror", route: "/getapierror" },
     { page: "photoDebug", route: "/photoDebug" },
+    { page: "stepperdebug", route: "/stepperdebug" },
+
 
   ]);
 

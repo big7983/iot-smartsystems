@@ -19,9 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} `}
+        className={`${geistSans.variable} ${geistMono.variable} bg-slate-50`}
       >
-        {children}
+        <div className="flex justify-center w-full ">
+          <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

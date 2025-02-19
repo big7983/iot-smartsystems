@@ -1,5 +1,4 @@
 // src/app/(debug)/getapi/page.tsx
-
 import React from "react";
 
 const Home = async () => {

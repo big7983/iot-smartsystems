@@ -31,7 +31,7 @@ export default function Page() {
 
       {image && (
         <div className="flex flex-col items-center">
-          <Image src={image} alt="Uploaded" className="w-64 h-64 object-cover rounded-lg shadow-md mb-4" />
+          <Image width={30} height={30} src={image} alt="Uploaded" className="w-64 h-64 object-cover rounded-lg shadow-md mb-4" />
           <textarea
             className="w-full max-w-lg h-32 p-2 border border-gray-300 rounded-lg bg-white"
             value={base64 || ""}

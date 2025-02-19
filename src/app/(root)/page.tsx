@@ -2,16 +2,19 @@
 import { useEffect, useState } from "react";
 import Manageroom from "@/components/Listroom/Manageroom";
 import Room from "@/components/Listroom/Room";
-// import { verifyToken } from "@/lib/jwt";
-import {jwtDecode} from "jwt-decode"; 
-
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
   const [selectbuilding, setSelectbuilding] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [role, setRole] = useState<any>(1);
+  const [role, setRole] = useState<string>();
+
+  const router = useRouter();
+  const menuItems = ["All", "A", "B", "C", "D", "E"];
 
   const changeTextColor = () => {
     setIsOptionSelected(true);
@@ -22,34 +25,28 @@ export default function Home() {
   // <TbDeviceImacOff color="#D34053" size={26} /> อุปกรณ์ไม่เชื่อมต่อ
   // <TbDeviceImacCheck color="#219653" size={26} /> อุปกรณ์เชื่อมต่อ
 
-  const menuItems = ["All", "A", "B", "C", "D", "E"];
-
   const handleSelect = (menu: string) => {
     setSelectbuilding(menu);
     console.log(`คุณเลือก: ${menu}`);
   };
 
   useEffect(() => {
-    const token:any = sessionStorage.getItem("token");
-    console.log("✅ Decoded JWT:", token);
-
-    const decoded:any = jwtDecode(token); 
-    setRole(decoded.role);
-    console.log("✅ Decoded JWT2:", decoded);
-
-    // if (token) {
-    //   verifyToken(token).then((decoded) => {
-    //     if (decoded) {
-    //       console.log("✅ Decoded JWT:", decoded); 
-    //       setRole(decoded.role);
-    //     } else {
-    //       console.log("❌ Invalid token");
-    //     }
-    //   });
-    // } else {
-    //   console.log("❌ No JWT found in cookies");
-    // }
-  }, []); 
+    if (typeof window !== "undefined") { // ✅ ตรวจสอบว่ารันบน client
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        Cookies.remove("Login");
+        router.push("/login");
+      } else {
+        try {
+          const decoded: any = jwtDecode(token);
+          setRole(decoded.role || "user");
+        } catch (error) {
+          console.error("❌ JWT Decode Error:", error);
+          setRole("user");
+        }
+      }
+    }
+  }, [router]); // ✅ ทำงานเฉพาะบน client
 
   return (
     <div className="flex justify-center w-full ">
@@ -95,11 +92,11 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  <option value="available" className="text-body">
-                    ว่าง
+                  <option value="true" className="text-body">
+                    เปิดใช้งาน
                   </option>
-                  <option value="notavailable" className="text-body">
-                    กำลังใช้งาน
+                  <option value="false" className="text-body">
+                    ปิดใช้งาน
                   </option>
                 </>
               )}
@@ -130,3 +127,5 @@ export default function Home() {
     </div>
   );
 }
+
+

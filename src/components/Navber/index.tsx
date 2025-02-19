@@ -35,7 +35,7 @@ const menuadminGroups = [
 ];
 
 export default function Nevber() {
-  const [role, setRole] = useState<any>(1);
+  const [role, setRole] = useState<string>("user");
   const pathname = usePathname();
   const router = useRouter();
 
@@ -45,13 +45,22 @@ export default function Nevber() {
   };
 
   useEffect(() => {
-    const token:any = sessionStorage.getItem("token");
-    console.log("✅ Decoded JWT:", token);
-
-    const decoded:any = jwtDecode(token); 
-    setRole(decoded.role);
-    console.log("✅ Decoded JWT2:", decoded);
-  }, []);
+    if (typeof window !== "undefined") { // ✅ ตรวจสอบว่ารันบน client
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        Cookies.remove("Login");
+        router.push("/login");
+      } else {
+        try {
+          const decoded: any = jwtDecode(token);
+          setRole(decoded.role || "user");
+        } catch (error) {
+          console.error("❌ JWT Decode Error:", error);
+          setRole("user");
+        }
+      }
+    }
+  }, [router]); // ✅ ทำงานเฉพาะบน client
 
   return (
     <nav className="w-full bg-white shadow-lg text-sm">

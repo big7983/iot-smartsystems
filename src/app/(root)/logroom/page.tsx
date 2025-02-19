@@ -12,7 +12,6 @@ const mockDataadmin = [
     name: "สมชาย แสนสุข",
     room: "A101",
     dateenter: "2025-01-01T08:00:00",
-    dateleave: "2025-01-01T17:00:00",
   },
   {
     id: 2,
@@ -20,7 +19,6 @@ const mockDataadmin = [
     name: "สมหญิง แสนสวย",
     room: "B102",
     dateenter: "2025-01-02T08:00:00",
-    dateleave: "2025-01-02T17:00:00",
   },
   {
     id: 3,
@@ -28,7 +26,6 @@ const mockDataadmin = [
     name: "เจริญ มีโชค",
     room: "C103",
     dateenter: "2025-01-03T08:00:00",
-    dateleave: "2025-01-03T17:00:00",
   },
   {
     id: 4,
@@ -36,7 +33,6 @@ const mockDataadmin = [
     name: "มานะ ภักดี",
     room: "D104",
     dateenter: "2025-01-04T08:00:00",
-    dateleave: "2025-01-04T17:00:00",
   },
   {
     id: 5,
@@ -44,7 +40,6 @@ const mockDataadmin = [
     name: "สมปอง พอเพียง",
     room: "E105",
     dateenter: "2025-01-05T08:00:00",
-    dateleave: "2025-01-05T17:00:00",
   },
 ];
 
@@ -53,31 +48,26 @@ const mockDatauser = [
     id: 1,
     room: "A101",
     dateenter: "2025-01-01T08:00:00",
-    dateleave: "2025-01-01T17:00:00",
   },
   {
     id: 2,
     room: "B102",
     dateenter: "2025-01-02T08:00:00",
-    dateleave: "2025-01-02T17:00:00",
   },
   {
     id: 3,
     room: "C103",
     dateenter: "2025-01-03T08:00:00",
-    dateleave: "2025-01-03T17:00:00",
   },
   {
     id: 4,
     room: "D104",
     dateenter: "2025-01-04T08:00:00",
-    dateleave: "2025-01-04T17:00:00",
   },
   {
     id: 5,
     room: "E105",
     dateenter: "2025-01-05T08:00:00",
-    dateleave: "2025-01-05T17:00:00",
   },
 ];
 
@@ -101,12 +91,7 @@ export default function Page() {
       width: 300,
       sortable: true,
     },
-    {
-      field: "dateleave",
-      headerName: "วันเวลาออก",
-      width: 300,
-      sortable: true,
-    },
+
   ];
 
   const columnsuser: GridColDef[] = [
