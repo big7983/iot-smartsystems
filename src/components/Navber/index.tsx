@@ -14,10 +14,6 @@ const menuGroups = [
     route: "/",
   },
   {
-    label: "ประวัติการเข้า-ออก",
-    route: "/logroom",
-  },
-  {
     label: "โปรไฟล์",
     route: "/profile",
   },

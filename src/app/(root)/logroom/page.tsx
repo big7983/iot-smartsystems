@@ -91,7 +91,6 @@ export default function Page() {
       width: 300,
       sortable: true,
     },
-
   ];
 
   const columnsuser: GridColDef[] = [
@@ -133,7 +132,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    const token:any = sessionStorage.getItem("token");
+    const token: any = sessionStorage.getItem("token");
     console.log("✅ Decoded JWT:", token);
 
     const decoded: any = jwtDecode(token);
@@ -163,28 +162,27 @@ export default function Page() {
             className="w-full sm:max-w-[350px] border border-gray-200 shadow rounded-2xl bg-white px-5 py-2 outline-none   focus:shadow-xl focus:border-gray-300  disabled:cursor-default"
           />
         </div>
-        <DataGrid
-          rows={
-            role == "admin"
-              ? filteredData(mockDataadmin)
-              : filteredData(mockDatauser)
-          }
-          columns={role == "admin" ? columnsadmin : columnsuser}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+          <DataGrid
+            rows={
+              role == "admin"
+                ? filteredData(mockDataadmin)
+                : filteredData(mockDatauser)
+            }
+            columns={role == "admin" ? columnsadmin : columnsuser}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
               },
-            },
-          }}
-          disableRowSelectionOnClick
-          pageSizeOptions={[5, 10, 25]}
-          // sx={{
-          //   boxShadow: 0,
-          //   border: 0,
-          // }}
-        />
+            }}
+            disableRowSelectionOnClick
+            pageSizeOptions={[5, 10, 25]}
+            sx={{
+              background: "#FFF"
+            }}
+          />
+        </div>
       </div>
-    </div>
   );
 }

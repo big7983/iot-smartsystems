@@ -1,6 +1,7 @@
 "use client";
 
 import ProfileInput from "@/components/Inputs";
+import Loader from "@/components/LoaderPage";
 // import Selects from "@/components/Selects";
 import axios from "axios";
 import Image from "next/image";
@@ -8,7 +9,8 @@ import React, { useEffect, useState } from "react";
 
 export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState<any>([]); // กำหนดให้ userData เป็น array
+  const [userData, setUserData] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -24,13 +26,11 @@ export default function Page() {
           }
         );
         setUserData(response.data);
-
-        console.log(response.data);
-
-        console.log("sa", process.env.NEXT_PUBLIC_API_URL);
-        console.log("sa2", token);
+        console.log(response.data);  
       } catch (error) {
         console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false); // เมื่อโหลดข้อมูลเสร็จให้เปลี่ยนเป็น false
       }
     };
 
@@ -63,6 +63,14 @@ export default function Page() {
     }
   };
 
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
+
   return (
     <div className="flex justify-center w-full ">
       <div className="w-full max-w-[1200px] flex flex-col  justify-center gap-5">
@@ -81,31 +89,30 @@ export default function Page() {
                 <p className="text-sm text-gray-500 ">{userData.email}</p>
               </div>
             </div>
-            
-            
-              {isEditing ? (
-                <div className="flex flex-col gap-5 md:flex-row md:max-w-[250px] w-full ml-auto">
-                  <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className=" w-full bg-warning hover:bg-slate-200 text-white border border-gray-200 shadow rounded-3xl bg-transparent px-5 py-3 outline-none focus:shadow-xl focus:border-gray-300 "
-                  >
-                    {isEditing ? "Cancel" : "Edit"}
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className=" w-full bg-green-600 hover:bg-slate-200 text-white  border border-gray-200 shadow rounded-3xl bg-transparent px-5 py-3 outline-none focus:shadow-xl focus:border-gray-300 "
-                  >
-                    Save
-                  </button>
-                </div>
-              ) : (
+
+            {isEditing ? (
+              <div className="flex flex-col gap-5 md:flex-row md:max-w-[250px] w-full ml-auto">
                 <button
+                  onClick={() => setIsEditing(!isEditing)}
+                  className=" w-full bg-warning hover:bg-slate-300 text-white border border-gray-200 shadow rounded-3xl bg-transparent px-5 py-3 outline-none focus:shadow-xl focus:border-gray-300 "
+                >
+                  {isEditing ? "Cancel" : "Edit"}
+                </button>
+                <button
+                  onClick={handleSave}
+                  className=" w-full bg-green-700 hover:bg-slate-300 text-white  border border-gray-200 shadow rounded-3xl bg-transparent px-5 py-3 outline-none focus:shadow-xl focus:border-gray-300 "
+                >
+                  Save
+                </button>
+              </div>
+            ) : (
+              <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="ml-auto w-full md:max-w-[150px] bg-warning text-white hover:bg-slate-200 border border-gray-200 shadow rounded-3xl bg-transparent px-5 py-3 outline-none focus:shadow-xl focus:border-gray-300 "
               >
                 Edit
               </button>
-              )}
+            )}
           </div>
         </div>
 
@@ -148,7 +155,7 @@ export default function Page() {
               onChanges={handleChange}
               editable={isEditing}
             />
-            
+
             <ProfileInput
               names={"date_of_birth"}
               title="Date of birth (วันเดือนปีที่เกิด)"

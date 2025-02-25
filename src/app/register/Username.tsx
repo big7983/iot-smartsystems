@@ -74,7 +74,7 @@ export default function Username() {
         />
       </div>
       <div className="flex justify-between gap-28 mt-7">
-        <button className="w-full py-3  rounded-xl bg-gray-300 text-primary hover:bg-gray-400">
+        <button className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400">
           ย้อนกลับ
         </button>
         <button

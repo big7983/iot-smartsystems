@@ -13,14 +13,6 @@ interface Room {
   Room_ID: string;
 }
 
-// const roomsData = [
-//   { id: "A100",  status: "available" },
-//   { id: "A200",  status: "notavailable" },
-//   { id: "B101",  status: "available" },
-//   { id: "C201",  status: "notavailable" },
-//   { id: "D301",  status: "available" },
-// ];
-
 export default function Room({ selectbuilding, selectedOption, searchQuery }: RoomProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
 

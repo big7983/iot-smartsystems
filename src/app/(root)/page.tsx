@@ -1,13 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import Manageroom from "@/components/Listroom/Manageroom";
-import Room from "@/components/Listroom/Room";
+import Logroom from "@/components/Listroom/Logroom";
+
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Toaster } from "react-hot-toast";
+import DatePicker from "react-datepicker";
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // สำหรับ <DatePicker>
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
   const [selectbuilding, setSelectbuilding] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +35,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") { // ✅ ตรวจสอบว่ารันบน client
+    if (typeof window !== "undefined") {
+      // ✅ ตรวจสอบว่ารันบน client
       const token = sessionStorage.getItem("token");
       if (!token) {
         Cookies.remove("Login");
@@ -50,6 +55,7 @@ export default function Home() {
 
   return (
     <div className="flex justify-center w-full ">
+      <Toaster position="bottom-left" reverseOrder={false} />
       <div className="flex flex-col justify-center max-w-[900px] w-full">
         <div className="flex flex-col gap-2 justify-center shadow-xl rounded-2xl border border-gray-100 bg-white p-5 sm:p-12 mb-10 ">
           <ul className=" grid grid-cols-3 md:grid-cols-6 gap-5 mb-5 text-center">
@@ -68,39 +74,37 @@ export default function Home() {
             ))}
           </ul>
           <div className=" flex flex-col md:flex-row justify-between gap-5 ">
-            <select
-              value={selectedOption}
-              onChange={(e) => {
-                setSelectedOption(e.target.value);
-                changeTextColor();
-              }}
-              className={` shadow rounded-2xl border border-gray-200 px-4 py-2 outline-none cursor-pointer hover:shadow-xl hover:border-gray-300 ${
-                isOptionSelected ? "text-black " : ""
-              }`}
-            >
-              <option value="" className="text-body ">
-                ทั้งหมด
-              </option>
-              {role == "admin" ? (
-                <>
-                  <option value="true" className="text-body">
-                    ห้องที่เปิด
-                  </option>
-                  <option value="false" className="text-body">
-                    ห้องที่ล็อก
-                  </option>
-                </>
-              ) : (
-                <>
-                  <option value="true" className="text-body">
-                    เปิดใช้งาน
-                  </option>
-                  <option value="false" className="text-body">
-                    ปิดใช้งาน
-                  </option>
-                </>
-              )}
-            </select>
+            {role == "admin" ? (
+              <select
+                value={selectedOption}
+                onChange={(e) => {
+                  setSelectedOption(e.target.value);
+                  changeTextColor();
+                }}
+                className={` shadow rounded-2xl border border-gray-200 px-4 py-2 outline-none cursor-pointer hover:shadow-xl hover:border-gray-300 ${
+                  isOptionSelected ? "text-black " : ""
+                }`}
+              >
+                <option value="" className="text-body ">
+                  ทั้งหมด
+                </option>
+
+                <option value="true" className="text-body">
+                  ห้องที่เปิด
+                </option>
+                <option value="false" className="text-body">
+                  ห้องที่ล็อก
+                </option>
+              </select>
+            ) : (
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="เลือกวันที่"
+                className="w-full sm:max-w-[200px] border border-gray-200 shadow rounded-2xl px-5 py-2 outline-none focus:shadow-xl focus:border-gray-300"
+              />
+            )}
             <input
               type="text"
               placeholder="ค้นหาชื่อห้อง"
@@ -117,15 +121,18 @@ export default function Home() {
             searchQuery={searchQuery}
           />
         ) : (
-          <Room
+          <Logroom
             selectbuilding={selectbuilding}
-            selectedOption={selectedOption}
+            selectedDate={selectedDate}
             searchQuery={searchQuery}
           />
+          // <Room
+          //   selectbuilding={selectbuilding}
+          //   selectedOption={selectedOption}
+          //   searchQuery={searchQuery}
+          // />
         )}
       </div>
     </div>
   );
 }
-
-

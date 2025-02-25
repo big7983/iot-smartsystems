@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable}  bg-slate-50`}
       >
         <header className="sticky top-0 z-50">
           <Navber />
