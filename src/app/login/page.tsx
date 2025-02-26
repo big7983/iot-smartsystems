@@ -8,6 +8,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, Toaster } from "react-hot-toast";
 import ProfilePopup from "@/components/ProfilePopup";
+import { useEffect } from "react";
 
 // const mockUsers = [
 //   { email: "user@user.com", password: "123456", role: 2 },
@@ -130,6 +131,13 @@ export default function Page() {
       }
     }
   };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      router.push("/");
+    }
+  }, []);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[395px] mx-5 sm:mx-0">

@@ -37,6 +37,8 @@ export default function Nevber() {
 
   const handleLogout = () => {
     Cookies.remove("Login");
+    sessionStorage.clear();
+    localStorage.clear();
     router.push("/login");
   };
 

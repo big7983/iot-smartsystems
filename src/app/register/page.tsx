@@ -35,7 +35,7 @@ export default function Page() {
   });
 
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับโหลดข้อมูล
-  const [tokenuser, setTokenuser] = useState(""); // New state to track if the username is confirmed
+  const [tokenuser, setTokenuser] = useState(null); // New state to track if the username is confirmed
   
 
   const handleInputChange = (

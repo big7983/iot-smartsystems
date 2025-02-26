@@ -10,19 +10,14 @@ import { Toaster } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 
 export default function Home() {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOption] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null); // สำหรับ <DatePicker>
-  const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
   const [selectbuilding, setSelectbuilding] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [role, setRole] = useState<string>();
 
   const router = useRouter();
   const menuItems = ["All", "A", "B", "C", "D", "E"];
-
-  const changeTextColor = () => {
-    setIsOptionSelected(true);
-  };
 
   // <FaLock color="#D34053" size={24}/> ไอคอนล็อก
   // <FaLockOpen color="#219653" size={24}/> ไอคอนอันล็อก
@@ -73,30 +68,16 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <div className=" flex flex-col md:flex-row justify-between gap-5 ">
-            {role == "admin" ? (
-              <select
-                value={selectedOption}
-                onChange={(e) => {
-                  setSelectedOption(e.target.value);
-                  changeTextColor();
-                }}
-                className={` shadow rounded-2xl border border-gray-200 px-4 py-2 outline-none cursor-pointer hover:shadow-xl hover:border-gray-300 ${
-                  isOptionSelected ? "text-black " : ""
-                }`}
-              >
-                <option value="" className="text-body ">
-                  ทั้งหมด
-                </option>
-
-                <option value="true" className="text-body">
-                  ห้องที่เปิด
-                </option>
-                <option value="false" className="text-body">
-                  ห้องที่ล็อก
-                </option>
-              </select>
-            ) : (
+          {role === "admin" ? (
+            <input
+              type="text"
+              placeholder="ค้นหาชื่อห้อง"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full  border border-gray-200 shadow rounded-2xl bg-transparent px-5 py-2 outline-none focus:shadow-xl focus:border-gray-300 disabled:cursor-default"
+            />
+          ) : (
+            <div className="flex flex-col md:flex-row justify-between gap-5">
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -104,15 +85,15 @@ export default function Home() {
                 placeholderText="เลือกวันที่"
                 className="w-full sm:max-w-[200px] border border-gray-200 shadow rounded-2xl px-5 py-2 outline-none focus:shadow-xl focus:border-gray-300"
               />
-            )}
-            <input
-              type="text"
-              placeholder="ค้นหาชื่อห้อง"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:max-w-[350px] border border-gray-200 shadow rounded-2xl bg-transparent px-5 py-2 outline-none   focus:shadow-xl focus:border-gray-300  disabled:cursor-default"
-            />
-          </div>
+              <input
+                type="text"
+                placeholder="ค้นหาชื่อห้อง"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full md:max-w-[350px] border border-gray-200 shadow rounded-2xl bg-transparent px-5 py-2 outline-none focus:shadow-xl focus:border-gray-300 disabled:cursor-default"
+              />
+            </div>
+          )}
         </div>
         {role == "admin" ? (
           <Manageroom

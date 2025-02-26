@@ -35,6 +35,7 @@ export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
   const bloodGroupOptions = ["A", "B", "AB", "O"];
 
   const [originalData, setOriginalData] = useState<UserData | null>(null);
@@ -63,7 +64,13 @@ export default function Page() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (hasFetched) return; // ถ้าเคยดึงข้อมูลแล้ว ให้ return ออกไปเลย
+      
+      setHasFetched(true); // ตั้งค่าว่าโหลดข้อมูลไปแล้ว
+      
       const token = sessionStorage.getItem("token");
+      if (!token) return;
+  
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/api/user_info/profile`,
@@ -75,23 +82,19 @@ export default function Page() {
           }
         );
         setUserData(response.data);
-        setOriginalData(response.data);
-        console.log(response.data);
+        setOriginalData(response.data); // บันทึกค่าเดิมไว้ใช้ตอน cancel
+        //console.log("User data fetched:", response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล ❌");
+        toast.error("เกิดข้อผิดพลาดในการโหลดข้อมูล ❌");
       } finally {
-        setLoading(false); // เมื่อโหลดข้อมูลเสร็จให้เปลี่ยนเป็น false
+        setLoading(false);
       }
     };
-
-    if (originalData) {
-      setUserData(originalData);
-    }
-
+  
     fetchUserData();
-  });
-
+  }, [hasFetched]); // ใช้ state แทน useRef เพื่อความเสถียร
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

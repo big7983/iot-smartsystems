@@ -11,6 +11,7 @@ export default function Username({ setTokenuser }: any) {
     password: "",
     confirmPassword: "",
   });
+  const [c , setC] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +43,8 @@ export default function Username({ setTokenuser }: any) {
 
       alert("ผ่าน");
       setTokenuser(response.data.access_token);
+      setC(true)
+
     } catch (error: any) {
       alert(
         `เกิดข้อผิดพลาด: ${error.response?.data?.message || error.message}`
@@ -61,7 +64,7 @@ export default function Username({ setTokenuser }: any) {
             name="username"
             value={formData.username}
             onChange={handleInputChange}
-            disabled={!!setTokenuser}
+            disabled={c}
             placeholder="ชื่อผู้ใช้"
             className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
           />
@@ -73,7 +76,7 @@ export default function Username({ setTokenuser }: any) {
             value={formData.password}
             onChange={handleInputChange}
             type="password"
-            disabled={!!setTokenuser}
+            disabled={c}
             placeholder="รหัสผ่าน"
             className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
           />
@@ -87,7 +90,7 @@ export default function Username({ setTokenuser }: any) {
             value={formData.confirmPassword}
             onChange={handleInputChange}
             type="password"
-            disabled={!!setTokenuser}
+            disabled={c}
             placeholder="ยืนยันรหัสผ่าน"
             className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
           />
@@ -101,7 +104,7 @@ export default function Username({ setTokenuser }: any) {
           ย้อนกลับ
         </button>
         <button
-          disabled={!!setTokenuser}
+          disabled={c}
           onClick={handleCheck}
           className="w-full py-3  rounded-xl bg-primary text-white hover:bg-secondary disabled:bg-gray-300"
         >
