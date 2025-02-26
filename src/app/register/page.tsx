@@ -12,25 +12,31 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [formData, setFormData] = useState({
-    id_card: "1",
-    student_id: "1",
-    first_name: "1",
-    last_name: "1",
-    nick_name: "1",
-    email: "1",
-    phone: "1",
-    line_id: "1",
-    Position: "1",
-    teleiphone: "1",
-    date_of_birth: "1",
-    blood_group: "1",
-    guardian_fname: "1",
-    guardian_lname: "1",
-    guardian_phone: "1",
+    id_card: "",
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    nick_name: "",
+    email: "",
+    password: "",
+    token_id: "",
+    user_line_id: "",
+    line_id: "",
+    position: "Student",
+    teleiphone: "",
+    date_of_birth: "",
+    blood_group: "",
+    guardian_fname: "",
+    guardian_lname: "",
+    guardian_phone: "",
+    nfc_id: "",
+    pin: "",
     photograph: "",
   });
 
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับโหลดข้อมูล
+  const [tokenuser, setTokenuser] = useState(""); // New state to track if the username is confirmed
+  
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -44,16 +50,25 @@ export default function Page() {
 
   const handleSaveData = async () => {
     setLoading(true); // เริ่มโหลด
+    console.log(" tokenuser : ",tokenuser)
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,
-        formData
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${tokenuser}`,
+          },
+        }
       );
 
-      if (response.status === 200) {
+      if (response.status == 200) {
         alert("บันทึกข้อมูลสำเร็จ!");
       }
       console.log(formData);
+      router.back()
+
     } catch (error: any) {
       alert(`เกิดข้อผิดพลาด: ${error}`);
       console.log(error);
@@ -78,24 +93,32 @@ export default function Page() {
         </h3>
       </div>
 
-      <Username />
-      <Information formData={formData} handleInputChange={handleInputChange} />
-      <Parent formData={formData} handleInputChange={handleInputChange} />
-      <UploadPhoto formData={formData} />
-      <div className="flex justify-between gap-28 mt-6">
-        <button
-          onClick={() => router.back()}
-          className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400"
-        >
-          Back
-        </button>
-        <button
-          onClick={handleSaveData}
-          className="w-full py-3  rounded-xl bg-primary text-white hover:bg-secondary"
-        >
-          {loading ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
-        </button>
-      </div>
+      <Username setTokenuser={setTokenuser} />
+      {tokenuser && (
+        <>
+          <Information
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+          <Parent formData={formData} handleInputChange={handleInputChange} />
+          <UploadPhoto formData={formData} />
+
+          <div className="flex justify-between gap-28 mt-6">
+            <button
+              onClick={() => router.back()}
+              className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleSaveData}
+              className="w-full py-3  rounded-xl bg-primary text-white hover:bg-secondary"
+            >
+              {loading ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

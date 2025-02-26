@@ -7,6 +7,7 @@ import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, Toaster } from "react-hot-toast";
+import ProfilePopup from "@/components/ProfilePopup";
 
 // const mockUsers = [
 //   { email: "user@user.com", password: "123456", role: 2 },
@@ -14,16 +15,39 @@ import { toast, Toaster } from "react-hot-toast";
 // ];
 
 export default function Page() {
-  const [username, setUsername] = useState("big7983");
-  const [password, setPassword] = useState("big7983");
+  const [profileData, setProfileData] = useState({
+    id_card: "",
+    student_id: "",
+    first_name: "",
+    last_name: "",
+    nick_name: "",
+    email: "",
+    password: "1",
+    token_id: "1",
+    user_line_id: "1",
+    line_id: "",
+    position: "Student",
+    teleiphone: "",
+    date_of_birth: "",
+    blood_group: "",
+    guardian_fname: "",
+    guardian_lname: "",
+    guardian_phone: "",
+    nfc_id: "1",
+    pin: "1",
+    photograph: "1",
+  });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [popupOpen, setPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-
+  const handleProfileSave = async () => {
+    console.log(profileData);
+    console.log(sessionStorage.getItem("token"))
     try {
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
         {
@@ -31,14 +55,69 @@ export default function Page() {
           password,
         }
       );
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,
+        profileData, // ส่งข้อมูลที่กรอก
+        {
+          headers: {
+            Authorization: `Bearer ${response.data.access_token}`,
+          },
+        }
+      );
+
+      toast.success("บันทึกข้อมูลสำเร็จ");
+      setPopupOpen(false); // ปิด popup เมื่อบันทึกข้อมูลเสร็จ
       sessionStorage.setItem("token", response.data.access_token);
+      router.push("/"); // ไปหน้า home
+    } catch (error: any) {
+      toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      console.log("Save Profile Failed", error);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // ล็อกอินและรับ token
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        {
+          username,
+          password,
+        }
+      );
+
+      sessionStorage.setItem("token", response.data.access_token);
+      console.log("token22",response.data.access_token)
+
+      // ทำการดึงข้อมูล profile โดยใช้ access_token
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user_info/profile`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${response.data.access_token}`,
+          },
+        }
+      );
+
       Cookies.set("Login", "1");
+
+      // ถ้าข้อมูล profile ถูกดึงมาได้สำเร็จ ให้ไปหน้า home
       router.push("/");
-    } catch (error:any) {
+    } catch (error: any) {
       setLoading(false);
+
       // ตรวจสอบว่า error มี response หรือไม่
       if (error.response) {
-        if (error.response.status === 401) {
+        // ถ้าเป็น 404 จากการดึง profile ให้ไปหน้า register
+        if (error.response.status === 404) {
+          setPopupOpen(true);
+        } else if (error.response.status === 401) {
+          // ถ้ารหัสผ่านหรือชื่อผู้ใช้ผิด
           toast.error("ชื่อหรือรหัสผ่านไม่ถูกต้อง");
         } else {
           toast.error("เกิดข้อผิดพลาดในการล็อกอิน");
@@ -91,7 +170,7 @@ export default function Page() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Enter your Password"
                 required
                 disabled={loading}
               />
@@ -128,6 +207,13 @@ export default function Page() {
           </Link>
         </button>
       </div>
+      <ProfilePopup
+        isOpen={popupOpen}
+        profileData={profileData}
+        setProfileData={setProfileData}
+        onSave={handleProfileSave}
+        onClose={() => setPopupOpen(false)}
+      />
     </div>
   );
 }

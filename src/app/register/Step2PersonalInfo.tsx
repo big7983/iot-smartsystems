@@ -81,9 +81,9 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
           />
           <ProfileInput
             title="Phone Number (เบอร์โทร)"
-            values={formData.phone}
+            values={formData.teleiphone}
             onChanges={handleInputChange}
-            names="phone"
+            names="teleiphone"
             editable={true}
 
           />

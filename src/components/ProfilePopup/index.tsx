@@ -1,81 +1,38 @@
-"use client";
-
-import axios from "axios";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+// components/ProfilePopup.tsx
+import { Toaster } from "react-hot-toast";
 import { MdOutlineCancel } from "react-icons/md";
 
-interface PopupusermanageProps {
-  student: any;
+
+type ProfilePopupProps = {
+  isOpen: boolean;
+  profileData: any;
+  setProfileData: React.Dispatch<React.SetStateAction<any>>;
+  onSave: () => void;
   onClose: () => void;
-}
+};
 
-interface StudentData {
-  id_card?: string;
-  first_name?: string;
-  last_name?: string;
-  nfc_id?: string;
-  pin?: string;
-  email?: string;
-  line_id?: string;
-  position?: string;
-  teleiphone?: string;
-  date_of_birth?: string;
-  blood_group?: string;
-  guardian_fname?: string;
-  guardian_lname?: string;
-  guardian_phone?: string;
-  student_id?: string;
-}
+const bloodGroupOptions = ["A", "B", "AB", "O"];
 
-export default function Index({ student, onClose }: PopupusermanageProps) {
-  const [userData, setUserData] = useState<StudentData>();  // Use student as initial state
-  const bloodGroupOptions = ["A", "B", "AB", "O"];
+export default function Index({
+  isOpen,
+  profileData,
+  setProfileData,
+  onSave,
+  onClose,
+}: ProfilePopupProps) {
+  if (!isOpen) return null;
 
-  const handleSave = async () => {
-    console.log("Data updated successfully:", userData);
-    const token = sessionStorage.getItem("token");
-    try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user_info/id_card/${userData?.id_card}`,
-        userData,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      toast.success("บันทึกข้อมูลสำเร็จ! 🎉");
-      onClose(); // Close the popup after saving
-    } catch (error) {
-      toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล ❌");
-      console.error("Error updating user data:", error);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        setProfileData({ ...profileData, photograph: base64String });
+      };
+      reader.readAsDataURL(file);
     }
   };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value, 
-    }));
-  };
-  
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-  
-
-  useEffect(() => {
-    setUserData(student);
-  }, [student]);  // Only update when student changes
-  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
@@ -84,39 +41,11 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
         <div className="py-6 px-4 sm:px-[50px]">
           <div className="flex justify-between items-center border-b border-stroke mb-5 pb-5">
             <h3 className="text-center sm:text-left font-semibold text-black ">
-              {student.first_name} {student.last_name}
+              ลงทะเบียน
             </h3>
             <button onClick={onClose}>
               <MdOutlineCancel size={28} color="gray" />
             </button>
-          </div>
-          <div className="border-b border-stroke ">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-5">
-              <div>
-                <label className="text-sm text-black block mb-1">
-                  ไอดีการ์ด NFC
-                </label>
-                <input
-                  name="nfc_id"
-                  value={userData?.nfc_id || ""}
-                  placeholder="ไม่มีข้อมูล"
-                  onChange={handleInputChange}
-                  className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-black block mb-1">
-                  PIN เข้าห้อง
-                </label>
-                <input
-                  name="pin"
-                  value={userData?.pin || ""}
-                  placeholder="ไม่มีข้อมูล"
-                  onChange={handleInputChange}
-                  className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
-                />
-              </div>
-            </div>
           </div>
           <div className="border-b border-stroke ">
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 my-5">
@@ -126,10 +55,11 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="id_card"
-                  value={userData?.id_card || ""}
+                  value={profileData.id_card || ""}
                   placeholder="ไม่มีข้อมูล"
-                  onChange={handleInputChange}
-                  disabled
+                  onChange={(e) =>
+                    setProfileData({ ...profileData, id_card: e.target.value })
+                  }
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
               </div>
@@ -141,8 +71,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="student_id"
-                  value={userData?.student_id || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.student_id || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      student_id: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -151,8 +86,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 <label className="text-sm text-black block mb-1">ชื่อ</label>
                 <input
                   name="first_name"
-                  value={userData?.first_name || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.first_name || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      first_name: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -161,8 +101,30 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 <label className="text-sm text-black block mb-1">นามสกุล</label>
                 <input
                   name="last_name"
-                  value={userData?.last_name || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.last_name || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      last_name: e.target.value,
+                    })
+                  }
+                  placeholder="ไม่มีข้อมูล"
+                  className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-black block mb-1">
+                  ชื่อเล่น
+                </label>
+                <input
+                  name="nick_name"
+                  value={profileData?.nick_name || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      nick_name: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -173,8 +135,10 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="email"
-                  value={userData?.email || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.email || ""}
+                  onChange={(e) =>
+                    setProfileData({ ...profileData, email: e.target.value })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -185,20 +149,27 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="line_id"
-                  value={userData?.line_id || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.line_id || ""}
+                  onChange={(e) =>
+                    setProfileData({ ...profileData, line_id: e.target.value })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
               </div>
               <div>
                 <label className="text-sm text-black block mb-1">
-                  ตำแหน่ง
+                  ชื่อไลน์
                 </label>
                 <input
-                  name="position"
-                  value={userData?.position || ""}
-                  onChange={handleInputChange}
+                  name="user_line_id"
+                  value={profileData?.user_line_id || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      user_line_id: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -209,8 +180,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="teleiphone "
-                  value={userData?.teleiphone || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.teleiphone || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      teleiphone: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -221,9 +197,14 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   type="date"
-                  name="date_of_birth"        
-                  value={userData?.date_of_birth || ""}
-                  onChange={handleInputChange}
+                  name="date_of_birth"
+                  value={profileData?.date_of_birth || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      date_of_birth: e.target.value,
+                    })
+                  }
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
               </div>
@@ -233,8 +214,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <select
                   name="blood_group"
-                  value={userData?.blood_group}
-                  onChange={handleSelectChange}
+                  value={profileData?.blood_group}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      blood_group: e.target.value,
+                    })
+                  }
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 >
                   <option value="" disabled>
@@ -257,8 +243,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="guardian_fname"
-                  value={userData?.guardian_fname || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.guardian_fname || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      guardian_fname: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -269,8 +260,13 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="guardian_lname"
-                  value={userData?.guardian_lname || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.guardian_lname || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      guardian_lname: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
@@ -281,14 +277,32 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
                 </label>
                 <input
                   name="guardian_phone"
-                  value={userData?.guardian_phone || ""}
-                  onChange={handleInputChange}
+                  value={profileData?.guardian_phone || ""}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      guardian_phone: e.target.value,
+                    })
+                  }
                   placeholder="ไม่มีข้อมูล"
                   className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
                 />
               </div>
             </div>
           </div>
+            <div className="mt-5">
+              <label className="text-sm text-black block mb-1">
+                อัพโหลดรูป
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black"
+              />
+            </div>
+          </div>
+
           <div className="flex justify-between gap-28 mt-6">
             <button
               onClick={onClose}
@@ -297,7 +311,7 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
               Back
             </button>
             <button
-              onClick={handleSave}
+              onClick={onSave}
               className="w-full py-3 rounded-xl bg-primary text-white hover:bg-secondary"
             >
               บันทึก
@@ -305,6 +319,5 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
           </div>
         </div>
       </div>
-    </div>
   );
 }

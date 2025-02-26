@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import ProfileInput from "@/components/Inputs";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 // import axios from "axios";
 
-export default function Username() {
+export default function Username({ setTokenuser }: any) {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -13,37 +16,38 @@ export default function Username() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleCheck = async () => {
-  //   const { username, password, confirmPassword } = formData;
+  const handleCheck = async () => {
+    const { username, password, confirmPassword } = formData;
 
-  //   if (!username || !password || !confirmPassword) {
-  //     alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-  //     return;
-  //   }
+    if (!username || !password || !confirmPassword) {
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return;
+    }
 
-  //   if (password !== confirmPassword) {
-  //     alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
-  //     return;
-  //   }
+    if (password !== confirmPassword) {
+      alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      return;
+    }
 
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-  //       {
-  //         username,
-  //         password,
-  //       }
-  //     );
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        {
+          username,
+          password,
+        }
+      );
 
-  //     console.log(response);
+      console.log(response);
 
-  //     alert("ผ่าน");
-  //   } catch (error: any) {
-  //     alert(
-  //       `เกิดข้อผิดพลาด: ${error.response?.data?.message || error.message}`
-  //     );
-  //   }
-  // };
+      alert("ผ่าน");
+      setTokenuser(response.data.access_token);
+    } catch (error: any) {
+      alert(
+        `เกิดข้อผิดพลาด: ${error.response?.data?.message || error.message}`
+      );
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-5">
@@ -51,34 +55,55 @@ export default function Username() {
         ข้อมูลบัญชีผู้ใช้
       </h4>
       <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-5 items-center">
-        <ProfileInput
-          title="Username"
-          values={formData.username}
-          onChanges={handleInputChange}
-          names="username"
-          editable={true}
-        />
-        <ProfileInput
-          title="Password"
-          values={formData.password}
-          onChanges={handleInputChange}
-          names="password"
-          editable={true}
-        />
-        <ProfileInput
-          title="Confirm Password"
-          values={formData.confirmPassword}
-          onChanges={handleInputChange}
-          names="confirmPassword"
-          editable={true}
-        />
+        <div>
+          <label className="text-sm text-black block mb-1">Username</label>
+          <input
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
+            disabled={!!setTokenuser}
+            placeholder="ชื่อผู้ใช้"
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          />
+        </div>
+        <div>
+          <label className="text-sm text-black block mb-1">Password</label>
+          <input
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            type="password"
+            disabled={!!setTokenuser}
+            placeholder="รหัสผ่าน"
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          />
+        </div>
+        <div>
+          <label className="text-sm text-black block mb-1">
+            Confirm Password
+          </label>
+          <input
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            type="password"
+            disabled={!!setTokenuser}
+            placeholder="ยืนยันรหัสผ่าน"
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          />
+        </div>
       </div>
       <div className="flex justify-between gap-28 mt-7">
-        <button className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400">
+        <button
+          onClick={() => router.back()}
+          className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400"
+        >
           ย้อนกลับ
         </button>
         <button
-          className="w-full py-3  rounded-xl bg-primary text-white hover:bg-secondary"
+          disabled={!!setTokenuser}
+          onClick={handleCheck}
+          className="w-full py-3  rounded-xl bg-primary text-white hover:bg-secondary disabled:bg-gray-300"
         >
           ลงทะเบียน
         </button>

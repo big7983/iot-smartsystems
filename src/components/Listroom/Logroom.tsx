@@ -65,8 +65,19 @@ export default function Room({
     const token = sessionStorage.getItem("token");
     const fetchData = async () => {
       try {
+
+        const responsecode = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user_info/profile`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/room-log/${"64200058"}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/room-log/${responsecode.data.student_id}`,
           {
             headers: {
               Accept: "application/json",
@@ -85,21 +96,24 @@ export default function Room({
     fetchData();
   }, []); // ✅ ใช้ dependency array ว่าง
 
-  const filteredRooms = rooms.filter((room) => {
-    const matchBuilding =
-      selectbuilding === "All" || room.room.charAt(0) === selectbuilding;
+  const filteredRooms = Array.isArray(rooms)
+  ? rooms.filter((room) => {
+      const matchBuilding =
+        selectbuilding === "All" || room.room.charAt(0) === selectbuilding;
 
-    const dateMatch =
-      !selectedDate ||
-      new Date(room.time_enter).toLocaleDateString("en-CA") ===
-        new Date(selectedDate).toLocaleDateString("en-CA"); // แปลงทั้งสองเป็น Date object
+      const dateMatch =
+        !selectedDate ||
+        new Date(room.time_enter).toLocaleDateString("en-CA") ===
+          new Date(selectedDate).toLocaleDateString("en-CA");
 
-    const matchSearch = room.room
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      const matchSearch = room.room
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
-    return matchBuilding && dateMatch && matchSearch;
-  });
+      return matchBuilding && dateMatch && matchSearch;
+    })
+  : [];
+
 
   return (
     <div className="flex justify-center w-full ">

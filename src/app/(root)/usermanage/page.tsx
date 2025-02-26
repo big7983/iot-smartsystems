@@ -1,76 +1,126 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Popupusermanage from "@/components/Popupusermanage";
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import Loader from "@/components/LoaderPage";
+import { useRouter } from "next/navigation";
 
 type Student = {
-  Student_ID: string;
-  First_name: string;
-  Last_name: string;
-  Email: string;
+  student_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  position: string;
+  photograph: string;
 };
 
-const initialStudentsData: Student[] = [
-  {
-    Student_ID: "64200123",
-    First_name: "บวรลักษณ์",
-    Last_name: "ศิลป์สกุลเจริญ",
-    Email: "64200123@kmitl.ac.th",
-  },
-  {
-    Student_ID: "64200247",
-    First_name: "สุทธิกานต์",
-    Last_name: "ศรีเพชร",
-    Email: "64200247@kmitl.ac.th",
-  },
-  {
-    Student_ID: "64200255",
-    First_name: "เสฎฐวุฒิ",
-    Last_name: "กสิวุฒิเชิดชูชัย",
-    Email: "64200123@kmitl.ac.th",
-  },
-  {
-    Student_ID: "S002",
-    First_name: "ขวัญจิตา",
-    Last_name: "อำนวยสุข",
-    Email: "แม่ของคุณ@gmail.com",
-  },
-  {
-    Student_ID: "S003",
-    First_name: "สมศักดิ์",
-    Last_name: "รักประยุทธ",
-    Email: "ไอ้โต๊ส@gmail.com",
-  },
-];
+// const initialStudentsData: Student[] = [
+//   {
+//     Student_ID: "64200123",
+//     First_name: "บวรลักษณ์",
+//     Last_name: "ศิลป์สกุลเจริญ",
+//     Email: "64200123@kmitl.ac.th",
+//   },
+//   {
+//     Student_ID: "64200247",
+//     First_name: "สุทธิกานต์",
+//     Last_name: "ศรีเพชร",
+//     Email: "64200247@kmitl.ac.th",
+//   },
+//   {
+//     Student_ID: "64200255",
+//     First_name: "เสฎฐวุฒิ",
+//     Last_name: "กสิวุฒิเชิดชูชัย",
+//     Email: "64200123@kmitl.ac.th",
+//   },
+//   {
+//     Student_ID: "S002",
+//     First_name: "ขวัญจิตา",
+//     Last_name: "อำนวยสุข",
+//     Email: "แม่ของคุณ@gmail.com",
+//   },
+//   {
+//     Student_ID: "S003",
+//     First_name: "สมศักดิ์",
+//     Last_name: "รักประยุทธ",
+//     Email: "ไอ้โต๊ส@gmail.com",
+//   },
+// ];
 
 export default function Page() {
-  const [data] = useState<Student[]>(initialStudentsData);
+  //const [data] = useState<Student[]>(initialStudentsData);
   const [search, setSearch] = useState("");
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error] = useState(null);
 
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-  const [idstu, setIdstu] = useState<string>("");
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
+  const router = useRouter()
 
   const handleOpenPopup = (id: string) => {
-    setIdstu(id); // เก็บ id ของนักเรียนที่ต้องการแสดงใน Popup
-    setIsPopupOpen(true); // เปิดป๊อปอัพ
+    const student = students.find((s) => s.student_id === id);
+    if (student) {
+      setSelectedStudent(student);
+      setIsPopupOpen(true);
+    }
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false); // ปิดป๊อปอัพ
   };
 
-  const filteredStudents = data.filter((student) => {
+  const filteredStudents = students.filter((student) => {
     const query = search.toLowerCase();
     return (
-      student.Student_ID.toLowerCase().includes(query) ||
-      student.First_name.toLowerCase().includes(query) ||
-      student.Last_name.toLowerCase().includes(query) ||
-      student.Email.toLowerCase().includes(query)
+      student.student_id.toLowerCase().includes(query) ||
+      student.first_name.toLowerCase().includes(query) ||
+      student.last_name.toLowerCase().includes(query) ||
+      student.email.toLowerCase().includes(query)
     );
   });
 
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`, // ส่ง Token ไปกับ Request
+            },
+          }
+        );
+        setStudents(response.data); // บันทึกข้อมูลใน State
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false); // เมื่อโหลดเสร็จแล้ว ปรับให้เป็น false
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
+  if (error)
+    return <p className="text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>;
+
   return (
     <div className="flex justify-center w-full ">
+      <Toaster position="bottom-left" />
+
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
         <h3 className="text-primary text-xl font-semibold mt-5 sm:mt-1">
           จัดการสิทธิ์ผู้ใช้
@@ -85,6 +135,7 @@ export default function Page() {
             className="w-full max-w-[80%] border border-gray-200 shadow rounded-3xl bg-white px-5 py-2 outline-none focus:border-gray-300  disabled:cursor-default"
           />
           <button
+          onClick={() => router.push('/register')}
             className={`px-3 py-2 rounded-3xl text-white font text-[13px] whitespace-nowrap sm:text-sm 
                       bg-success hover:shadow-xl hover:border-gray-300 hover:bg-green-900 transition-all
                      `}
@@ -94,36 +145,34 @@ export default function Page() {
         </div>
         <div className="flex flex-col gap-5">
           {filteredStudents.length > 0 ? (
-            filteredStudents.map((student) => (
-              <div
-                key={student.Student_ID}
-                className="bg-white shadow-md rounded-2xl p-5"
-              >
+            filteredStudents.map((student, index) => (
+              <div key={index} className="bg-white shadow-md rounded-2xl p-5">
                 <div className="flex flex-row items-center w-full gap-4 md:gap-6 ">
                   <div className="w-15 h-15  border-gray-200 rounded-full dark:border-gray-800">
                     <Image
                       width={50}
                       height={50}
-                      src="/avatar-user.jpg"
+                      src={student.photograph || "/avatar-user.jpg"}
                       alt="user"
+                      className="rounded-full"
                     />
                   </div>
                   <div>
                     <h4 className="mb-1 text-sm sm:text-lg font-semibold text-primary text-left">
-                      {student.First_name} {student.Last_name}
+                      {student.first_name} {student.last_name}
                     </h4>
                     <div className="flex items-center gap-3 flex-row text-left">
                       <p className="text-[10px] sm:text-sm text-gray-500 ">
-                        {student.Student_ID}
+                        {student.student_id}
                       </p>
                       <div className="hidden h-3.5 w-px bg-gray-300 sm:block"></div>
                       <p className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">
-                        {student.Email}
+                        {student.position}
                       </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => handleOpenPopup(student.Student_ID)}
+                    onClick={() => handleOpenPopup(student.student_id)}
                     className="ml-auto px-4 py-2 rounded-2xl text-white text-sm bg-warning hover:shadow-xl hover:border-gray-300 hover:bg-yellow-900 transition-all"
                   >
                     เลือก
@@ -138,8 +187,8 @@ export default function Page() {
           )}
         </div>
       </div>
-      {isPopupOpen && (
-        <Popupusermanage idstu={idstu} onClose={handleClosePopup} />
+      {isPopupOpen && selectedStudent && (
+        <Popupusermanage student={selectedStudent} onClose={handleClosePopup} />
       )}
     </div>
   );
