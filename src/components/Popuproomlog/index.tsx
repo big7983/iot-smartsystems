@@ -55,8 +55,24 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
   const [searchText, setSearchText] = useState<string>("");
   const [roomLogs, setRoomLogs] = useState([]);
 
+  const formatDateTime = (isoString: string) => {
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return "Invalid Date"; // กัน Error ถ้าค่าไม่ถูกต้อง
+
+    return date
+      .toLocaleString("th-TH", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", ""); // เอา `,` ออก
+  };
+
   const columnsadmin: GridColDef[] = [
-    { field: "code", headerName: "รหัสนักศึกษา", width: 120 },
+    { field: "student_id", headerName: "รหัสนักศึกษา", width: 120 },
     {
       field: "firstname",
       headerName: "ชื่อ",
@@ -69,12 +85,13 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
       width: 200,
       sortable: true,
     },
-    { field: "room", headerName: "ห้อง", width: 100, sortable: true },
+    { field: "room_id", headerName: "ห้อง", width: 100, sortable: true },
     {
-      field: "time_enter",
+      field: "timestamp",
       headerName: "วันเวลาเข้า",
       width: 300,
       sortable: true,
+      renderCell: (params: any) => formatDateTime(params.row.timestamp),
     },
   ];
 
@@ -91,7 +108,7 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
         item.lastname?.toLowerCase().includes(searchText) ||
         item.code?.toString().includes(searchText);
       const roomMatch =
-        !chooseroom || item.room?.toLowerCase() === chooseroom.toLowerCase(); // ใช้ค่า room จาก props
+        !chooseroom || item.room_id?.toLowerCase() === chooseroom.toLowerCase(); // ใช้ค่า room จาก props
 
       return dateMatch && textMatch && roomMatch;
       
@@ -105,10 +122,10 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
   useEffect(() => {
     const fetchRoomLogs = async () => {
       const token = sessionStorage.getItem("token");
-
+  
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/room-log`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/nfc-log`,
           {
             headers: {
               Accept: "application/json",
@@ -116,16 +133,18 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
             },
           }
         );
-
+  
         setRoomLogs(response.data);
         console.log("log : ", response.data);
       } catch (error) {
         console.error("Error fetching room logs:", error);
-      } 
+      }
     };
-  console.log(chooseroom);
+  
+    console.log(chooseroom);
     fetchRoomLogs();
-  });
+  }, [chooseroom]); // ✅ ให้ useEffect ทำงานเฉพาะเมื่อ chooseroom เปลี่ยนค่า
+  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

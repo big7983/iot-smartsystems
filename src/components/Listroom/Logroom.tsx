@@ -5,26 +5,17 @@ import "react-datepicker/dist/react-datepicker.css";
 
 interface RoomProps {
   selectbuilding: string;
-  selectedDate: Date | null;  
+  selectedDate: Date | null;
   searchQuery: string;
 }
 
 interface Room {
   id: string;
-  time_enter: Date;
-  room: string;
+  timestamp: Date;
+  room_id: string;
+  student_id: string;
   building: string;
 }
-
-const columnsuser: GridColDef[] = [
-  { field: "room", headerName: "ห้อง", width: 100, sortable: true },
-  {
-    field: "time_enter",
-    headerName: "วันเวลาเข้า",
-    width: 300,
-    sortable: true,
-  },
-];
 
 // const mockDatauser = [
 //   {
@@ -60,12 +51,12 @@ export default function Room({
   searchQuery,
 }: RoomProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [student_id, setStudent_id] = useState("");
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     const fetchData = async () => {
       try {
-
         const responsecode = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/api/user_info/profile`,
           {
@@ -76,8 +67,10 @@ export default function Room({
           }
         );
 
+        setStudent_id(responsecode.data.student_id);
+
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/room-log/${responsecode.data.student_id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/nfc-log`,
           {
             headers: {
               Accept: "application/json",
@@ -87,6 +80,7 @@ export default function Room({
         );
         setRooms(response.data);
         console.log(" res ", response.data);
+        console.log(responsecode.data.student_id);
       } catch (error) {
         console.log("Fetch error:", error);
       }
@@ -96,23 +90,42 @@ export default function Room({
     fetchData();
   }, []); // ✅ ใช้ dependency array ว่าง
 
+  const formatDateTime = (isoString: string) => {
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return "Invalid Date"; // กัน Error ถ้าค่าไม่ถูกต้อง
+
+    return date
+      .toLocaleString("th-TH", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", ""); // เอา `,` ออก
+  };
+
   const filteredRooms = Array.isArray(rooms)
-  ? rooms.filter((room) => {
-      const matchBuilding =
-        selectbuilding === "All" || room.room.charAt(0) === selectbuilding;
+    ? rooms.filter((room) => {
+        const matchBuilding =
+          selectbuilding === "All" || room.room_id.charAt(0) === selectbuilding;
 
-      const dateMatch =
-        !selectedDate ||
-        new Date(room.time_enter).toLocaleDateString("en-CA") ===
-          new Date(selectedDate).toLocaleDateString("en-CA");
+        const dateMatch =
+          !selectedDate ||
+          new Date(room.timestamp).toLocaleDateString("en-CA") ===
+            new Date(selectedDate).toLocaleDateString("en-CA");
 
-      const matchSearch = room.room
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+        const matchSearch = room.room_id
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-      return matchBuilding && dateMatch && matchSearch;
-    })
-  : [];
+        const matchUser = room.student_id == student_id;
+
+        return matchBuilding && dateMatch && matchSearch && matchUser;
+      })
+    : [];
+
 
 
   return (
@@ -120,7 +133,21 @@ export default function Room({
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
         <DataGrid
           rows={filteredRooms}
-          columns={columnsuser}
+          columns={[
+            {
+              field: "room_id",
+              headerName: "ห้อง",
+              width: 100,
+              sortable: true,
+            },
+            {
+              field: "timestamp",
+              headerName: "วันเวลาเข้า",
+              width: 300,
+              sortable: true,
+              renderCell: (params: any) => formatDateTime(params.row.timestamp),
+            },
+          ]}
           initialState={{
             pagination: {
               paginationModel: {
