@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-// import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function Username({ setTokenuser }: any) {
   const router = useRouter();
@@ -41,14 +41,15 @@ export default function Username({ setTokenuser }: any) {
 
       console.log(response);
 
-      alert("ผ่าน");
+      toast.success("สมัครสมาชิกสำเร็จ!");
       setTokenuser(response.data.access_token);
       setC(true)
 
     } catch (error: any) {
-      alert(
+      console.log(
         `เกิดข้อผิดพลาด: ${error.response?.data?.message || error.message}`
       );
+      toast.error(`เกิดข้อผิดพลาด`);
     }
   };
 

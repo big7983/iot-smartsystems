@@ -9,6 +9,7 @@ import { GoArrowLeft } from "react-icons/go";
 
 import React, { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function Page() {
     email: "",
     password: "1",
     token_id: "1",
-    user_line_id: "1",
+    user_line_id: "",
     line_id: "",
     position: "Student",
     teleiphone: "",
@@ -30,8 +31,8 @@ export default function Page() {
     guardian_lname: "",
     guardian_phone: "",
     nfc_id: "1",
-    pin: "1",
-    photograph: "1",
+    pin: "",
+    photograph: null,
   });
 
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับโหลดข้อมูล
@@ -50,8 +51,6 @@ export default function Page() {
 
   const handleSaveData = async () => {
     setLoading(true); // เริ่มโหลด
-    console.log(" tokenuser : ",tokenuser)
-    console.log("data",formData)
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,
@@ -65,13 +64,13 @@ export default function Page() {
       );
 
       if (response.status == 200) {
-        alert("บันทึกข้อมูลสำเร็จ!");
+        toast.success("บันทึกข้อมูลสำเร็จ!");
       }
       console.log(formData);
       router.back()
 
     } catch (error: any) {
-      alert(`เกิดข้อผิดพลาด: ${error}`);
+      toast.error(`เกิดข้อผิดพลาดในการบันทึกข้อมูล`);
       console.log(error);
     } finally {
       setLoading(false); // หยุดโหลด
@@ -81,6 +80,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-5 my-5 xl:p-0 p-5">
+      <Toaster position="bottom-left" reverseOrder={false} />
       <div className="flex flex-row items-center gap-5">
         <div
           className="bg-primary hover:bg-secondary p-3 w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
