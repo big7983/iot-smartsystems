@@ -2,7 +2,6 @@
 import { Toaster } from "react-hot-toast";
 import { MdOutlineCancel } from "react-icons/md";
 
-
 type ProfilePopupProps = {
   isOpen: boolean;
   profileData: any;
@@ -290,20 +289,17 @@ export default function Index({
               </div>
             </div>
           </div>
-            <div className="mt-5">
-              <label className="text-sm text-black block mb-1">
-                อัพโหลดรูป
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black"
-              />
-            </div>
+          <div className="mt-5">
+            <label className="text-sm text-black block mb-1">อัพโหลดรูป</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black"
+            />
           </div>
 
-          <div className="flex justify-between gap-28 mt-6">
+          <div className="flex justify-between gap-28 mt-5 ">
             <button
               onClick={onClose}
               className="w-full py-3  rounded-xl bg-gray-300 text-black hover:bg-gray-400"
@@ -319,5 +315,6 @@ export default function Index({
           </div>
         </div>
       </div>
+    </div>
   );
 }

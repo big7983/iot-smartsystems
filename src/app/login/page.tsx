@@ -210,7 +210,7 @@ export default function Page() {
           disabled={loading}
           className="text-base  w-full flex justify-center items-center bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary disabled:bg-slate-400"
         >
-          <Link className="w-full" href="/register">
+          <Link className="w-full h-full" href="/register">
             Register
           </Link>
         </button>

@@ -18,9 +18,9 @@ export default function Page() {
     last_name: "",
     nick_name: "",
     email: "",
-    password: "",
-    token_id: "",
-    user_line_id: "",
+    password: "1",
+    token_id: "1",
+    user_line_id: "1",
     line_id: "",
     position: "Student",
     teleiphone: "",
@@ -29,9 +29,9 @@ export default function Page() {
     guardian_fname: "",
     guardian_lname: "",
     guardian_phone: "",
-    nfc_id: "",
-    pin: "",
-    photograph: "",
+    nfc_id: "1",
+    pin: "1",
+    photograph: "1",
   });
 
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับโหลดข้อมูล
@@ -51,6 +51,7 @@ export default function Page() {
   const handleSaveData = async () => {
     setLoading(true); // เริ่มโหลด
     console.log(" tokenuser : ",tokenuser)
+    console.log("data",formData)
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,

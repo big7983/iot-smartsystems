@@ -59,11 +59,23 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
           names="nick_name"
           editable={true}
         />
+        <div>
+          <label className="text-sm text-black block mb-1">
+            Date of birth (วันเดือนปีที่เกิด)
+          </label>
+          <input
+            type="date"
+            name="date_of_birth"
+            value={formData.date_of_birth}
+            onChange={handleInputChange}
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          />
+        </div>
         <ProfileInput
-          title="Date of birth (วันเดือนปีที่เกิด)"
-          values={formData.date_of_birth}
+          title="ชื่อไลน์"
+          values={formData.user_line_id}
           onChanges={handleInputChange}
-          names="date_of_birth"
+          names="user_line_id"
           editable={true}
         />
         <ProfileInput
@@ -75,9 +87,9 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
         />
         <ProfileInput
           title="Phone Number (เบอร์โทร)"
-          values={formData.phone}
+          values={formData.teleiphone}
           onChanges={handleInputChange}
-          names="phone"
+          names="teleiphone"
           editable={true}
         />
         <Selects
@@ -87,6 +99,16 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
           title="Blood Type (กรุ๊ปเลือด)"
           options={["A", "B", "AB", "O"]}
         />
+        <div>
+          <label className="text-sm text-black block mb-1">PIN สำหรับ NFC</label>
+          <input
+            name={"pin"}
+            value={formData.pin}
+            onChange={handleInputChange}
+            placeholder="PIN"
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          />
+        </div>
       </div>
     </div>
   );
