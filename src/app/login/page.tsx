@@ -137,7 +137,7 @@ export default function Page() {
     if (token) {
       router.push("/");
     }
-  }, []);
+  }, [router]);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg  w-full px-5 py-8 sm:p-8 max-w-[395px] mx-5 sm:mx-0">
