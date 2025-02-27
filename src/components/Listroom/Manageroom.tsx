@@ -17,7 +17,6 @@ const roomsData = [
 
 export default function Manageroom({
   selectbuilding,
-  selectedOption,
   searchQuery,
 }: ManageroomProps) {
   //const [rooms, setRooms] = useState<Room[]>([]);
