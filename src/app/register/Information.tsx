@@ -11,6 +11,17 @@ interface Step2Props {
 }
 
 const Step2 = ({ formData, handleInputChange }: Step2Props) => {
+
+  const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!/^\d*$/.test(value)) {
+      return;
+    }
+    if (value.length <= 6) {
+      handleInputChange(e);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl p-5">
       <h4 className="mb-2 text-lg font-semibold text-primary text-left">
@@ -104,7 +115,8 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
           <input
             name={"pin"}
             value={formData.pin}
-            onChange={handleInputChange}
+            onChange={handlePinChange} 
+            maxLength={6}
             placeholder="PIN"
             className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
           />

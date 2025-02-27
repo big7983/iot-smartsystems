@@ -21,8 +21,8 @@ export default function Page() {
     email: "",
     password: "1",
     token_id: "1",
-    user_line_id: "",
     line_id: "",
+    user_line_id: "",
     position: "Student",
     teleiphone: "",
     date_of_birth: "",
@@ -30,9 +30,9 @@ export default function Page() {
     guardian_fname: "",
     guardian_lname: "",
     guardian_phone: "",
-    nfc_id: "1",
+    nfc_id: "null",
     pin: "",
-    photograph: null,
+    photograph: "/avatar-user.jpg"
   });
 
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับโหลดข้อมูล
@@ -66,16 +66,18 @@ export default function Page() {
       if (response.status == 200) {
         toast.success("บันทึกข้อมูลสำเร็จ!");
       }
-      console.log(formData);
+      console.log("fd", formData);
       router.back()
 
     } catch (error: any) {
       toast.error(`เกิดข้อผิดพลาดในการบันทึกข้อมูล`);
       console.log(error);
+      console.log("fd", formData);
     } finally {
       setLoading(false); // หยุดโหลด
     }
   };
+
   const router = useRouter();
 
   return (
