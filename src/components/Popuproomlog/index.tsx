@@ -71,8 +71,6 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
       .replace(",", ""); // เอา `,` ออก
   };
 
-  const formatDate = (date: Date) => date.toISOString().split("T")[0];
-
   const columnsadmin: GridColDef[] = [
     { field: "student_id", headerName: "รหัสนักศึกษา", width: 120 },
     {
@@ -92,20 +90,35 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
     { field: "entry_method", headerName: "Becon/NFC", width: 100, sortable: true }
   ];
 
+  const formatDate = (date: Date) => {
+    return date
+      .toLocaleDateString("th-TH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .replace(/\/+/g, "/"); // ✅ แปลงเป็น DD/MM/YYYY
+  };
+  
+
   const filteredData = (data: any[]) => {
     return data.filter((item) => {
+      const formattedDate = formatDate(new Date(item.entry_time)); // ✅ แปลงเป็น DD/MM/YYYY
+  
       const dateMatch =
-        !selectedDate ||
-        formatDate(new Date(item.entry_time)) === formatDate(selectedDate);
+        !selectedDate || formattedDate === formatDate(selectedDate);
       const textMatch =
         item.first_name?.toLowerCase().includes(searchText) ||
-        item.student_id?.toLowerCase().includes(searchText);
+        item.student_id?.toString().includes(searchText) || 
+        formattedDate.includes(searchText); // ✅ ค้นหาวันที่ในฟอร์แมต DD/MM/YYYY
+  
       const roomMatch =
-        !chooseroom || item.room_id?.toLowerCase() === chooseroom.toLowerCase(); // ใช้ค่า room จาก props
-
+        !chooseroom || item.room_id?.toLowerCase() === chooseroom.toLowerCase();
+  
       return dateMatch && textMatch && roomMatch;
     });
   };
+  
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value.toLowerCase());

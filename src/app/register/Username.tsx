@@ -21,12 +21,12 @@ export default function Username({ setTokenuser }: any) {
     const { username, password, confirmPassword } = formData;
 
     if (!username || !password || !confirmPassword) {
-      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      toast.error(`กรอกข้อมูลให้ครบถ้วน`);
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+      toast.error(`รหัสผ่านไม่ตรงกัน`);
       return;
     }
 
@@ -35,7 +35,7 @@ export default function Username({ setTokenuser }: any) {
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
         {
           username,
-          password,
+          password
         }
       );
 
@@ -49,7 +49,7 @@ export default function Username({ setTokenuser }: any) {
       console.log(
         `เกิดข้อผิดพลาด: ${error.response?.data?.message || error.message}`
       );
-      toast.error(`เกิดข้อผิดพลาด`);
+      toast.error(`เกิดข้อผิดพลาด : ${error.response?.data?.message || error.message}`);
     }
   };
 

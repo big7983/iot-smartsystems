@@ -98,12 +98,8 @@ export default function Manageroom({
     const matchesSearch = room.Room_ID.toLowerCase().includes(
       searchQuery.toLowerCase()
     );
-    const matchesStatus =
-      selectedOption === "" ||
-      (selectedOption === "true" && room.room_status) ||
-      (selectedOption === "false" && !room.room_status);
 
-    return matchesBuilding && matchesStatus && matchesSearch;
+    return matchesBuilding && matchesSearch;
   });
 
   // <FaLock color="#D34053" size={24}/> ไอคอนล็อก
