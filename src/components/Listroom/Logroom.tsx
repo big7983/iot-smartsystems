@@ -11,7 +11,7 @@ interface RoomProps {
 
 interface Room {
   id: string;
-  timestamp: Date;
+  entry_time: Date;
   room_id: string;
   student_id: string;
   building: string;
@@ -70,7 +70,7 @@ export default function Room({
         setStudent_id(responsecode.data.student_id);
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/nfc-log`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/room-entry`,
           {
             headers: {
               Accept: "application/json",
@@ -113,7 +113,7 @@ export default function Room({
 
         const dateMatch =
           !selectedDate ||
-          new Date(room.timestamp).toLocaleDateString("en-CA") ===
+          new Date(room.entry_time).toLocaleDateString("en-CA") ===
             new Date(selectedDate).toLocaleDateString("en-CA");
 
         const matchSearch = room.room_id
@@ -132,7 +132,10 @@ export default function Room({
     <div className="flex justify-center w-full ">
       <div className="flex flex-col justify-center gap-7 max-w-[1200px] w-full ">
         <DataGrid
-          rows={filteredRooms}
+          rows={filteredRooms.map((row, index) => ({
+            ...row,
+            id: index, // ใช้ index เป็น id
+          }))}
           columns={[
             {
               field: "room_id",
@@ -141,12 +144,18 @@ export default function Room({
               sortable: true,
             },
             {
-              field: "timestamp",
+              field: "entry_time",
               headerName: "วันเวลาเข้า",
               width: 300,
               sortable: true,
-              renderCell: (params: any) => formatDateTime(params.row.timestamp),
+              renderCell: (params: any) => formatDateTime(params.row.entry_time),
             },
+            {
+              field: "entry_method",
+              headerName: "Beacon/NFC",
+              width: 100,
+              sortable: true,
+            }
           ]}
           initialState={{
             pagination: {

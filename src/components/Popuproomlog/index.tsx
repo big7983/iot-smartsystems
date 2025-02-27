@@ -71,47 +71,39 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
       .replace(",", ""); // เอา `,` ออก
   };
 
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
   const columnsadmin: GridColDef[] = [
     { field: "student_id", headerName: "รหัสนักศึกษา", width: 120 },
     {
-      field: "firstname",
+      field: "first_name",
       headerName: "ชื่อ",
-      width: 200,
-      sortable: true,
-    },
-    {
-      field: "lastname",
-      headerName: "นามสกุล",
       width: 200,
       sortable: true,
     },
     { field: "room_id", headerName: "ห้อง", width: 100, sortable: true },
     {
-      field: "timestamp",
+      field: "entry_time",
       headerName: "วันเวลาเข้า",
       width: 300,
       sortable: true,
-      renderCell: (params: any) => formatDateTime(params.row.timestamp),
+      renderCell: (params: any) => formatDateTime(params.row.entry_time),
     },
+    { field: "entry_method", headerName: "Becon/NFC", width: 100, sortable: true }
   ];
 
   const filteredData = (data: any[]) => {
     return data.filter((item) => {
       const dateMatch =
         !selectedDate ||
-        new Date(item.dateenter).toLocaleDateString() ===
-          selectedDate.toLocaleDateString() ||
-        new Date(item.dateleave).toLocaleDateString() ===
-          selectedDate.toLocaleDateString();
+        formatDate(new Date(item.entry_time)) === formatDate(selectedDate);
       const textMatch =
-        item.firstname?.toLowerCase().includes(searchText) ||
-        item.lastname?.toLowerCase().includes(searchText) ||
-        item.code?.toString().includes(searchText);
+        item.first_name?.toLowerCase().includes(searchText) ||
+        item.student_id?.toLowerCase().includes(searchText);
       const roomMatch =
         !chooseroom || item.room_id?.toLowerCase() === chooseroom.toLowerCase(); // ใช้ค่า room จาก props
 
       return dateMatch && textMatch && roomMatch;
-      
     });
   };
 
@@ -122,10 +114,10 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
   useEffect(() => {
     const fetchRoomLogs = async () => {
       const token = sessionStorage.getItem("token");
-  
+
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/nfc-log`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/room-entry`,
           {
             headers: {
               Accept: "application/json",
@@ -133,18 +125,17 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
             },
           }
         );
-  
+
         setRoomLogs(response.data);
         console.log("log : ", response.data);
       } catch (error) {
         console.error("Error fetching room logs:", error);
       }
     };
-  
+
     console.log(chooseroom);
     fetchRoomLogs();
   }, [chooseroom]); // ✅ ให้ useEffect ทำงานเฉพาะเมื่อ chooseroom เปลี่ยนค่า
-  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
@@ -177,7 +168,10 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
               />
             </div>
             <DataGrid
-              rows={filteredData(roomLogs)}
+              rows={filteredData(roomLogs).map((row, index) => ({
+                ...row,
+                id: index, // ใช้ index เป็น id
+              }))}
               columns={columnsadmin}
               initialState={{
                 pagination: {

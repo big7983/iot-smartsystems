@@ -152,7 +152,7 @@ export default function Page() {
                     <Image
                       width={50}
                       height={50}
-                      src={student.photograph || "/avatar-user.jpg"}
+                      src={student.photograph?.startsWith("data:image") ? student.photograph : "/avatar-user.jpg"}
                       alt="user"
                       className="rounded-full"
                     />
