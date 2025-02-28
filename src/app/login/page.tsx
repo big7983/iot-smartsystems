@@ -34,9 +34,9 @@ export default function Page() {
     guardian_fname: "",
     guardian_lname: "",
     guardian_phone: "",
-    nfc_id: "1",
+    nfc_id: "nodata",
     pin: "1",
-    photograph: "1",
+    photograph: "/avatar-user.jpg",
   });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

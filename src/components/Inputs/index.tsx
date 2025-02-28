@@ -23,7 +23,7 @@ export default function index({
         value={values || ""}
         onChange={onChanges}
         disabled={!editable}
-        placeholder={names || ""}
+        placeholder={names || ""}       
         className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
       />
     </div>

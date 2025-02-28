@@ -88,15 +88,15 @@ const Step3 = ({ formData }: Step3Props) => {
           </div>
 
           <h4 className="mb-3 font-semibold text-primary text-theme-xl ">
-            {isDragActive ? "Drop Files Here" : "Drag & Drop Files Here"}
+            {isDragActive ? "วางไฟล์ที่นี้" : "ลากและวางไฟล์ที่นี่"}
           </h4>
 
           <span className="text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 ">
-            Drag and drop your PNG, JPG, WebP, SVG images here or browse
+            หากต้องการอัพโหลดรูปควรมีขนาดจัตุรัสไม่เกิน 250x250 px เพราะจะมีปัญหาได้
           </span>
 
           <span className="font-medium underline text-theme-sm text-brand-500">
-            Browse File
+            ค้นหาไฟล์
           </span>
         </div>
       </form>

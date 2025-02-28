@@ -26,11 +26,24 @@ interface StudentData {
   guardian_lname?: string;
   guardian_phone?: string;
   student_id?: string;
+  photograph?: string;
 }
 
 export default function Index({ student, onClose }: PopupusermanageProps) {
   const [userData, setUserData] = useState<StudentData>();  // Use student as initial state
   const bloodGroupOptions = ["A", "B", "AB", "O"];
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        setUserData({ ...userData, photograph: base64String });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSave = async () => {
     console.log("Data updated successfully:", userData);
@@ -48,6 +61,9 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
       );
       toast.success("บันทึกข้อมูลสำเร็จ! 🎉");
       onClose(); // Close the popup after saving
+      setTimeout(() => {
+        window.location.reload(); // รีโหลดหน้าเว็บ
+      }, 500); // รอ 0.5 วินาทีเพื่อให้ popup ปิดก่อน
     } catch (error) {
       toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล ❌");
       console.error("Error updating user data:", error);
@@ -289,6 +305,17 @@ export default function Index({ student, onClose }: PopupusermanageProps) {
               </div>
             </div>
           </div>
+
+          <div className="mt-5">
+            <label className="text-sm text-black block mb-1">อัพโหลดรูป</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black"
+            />
+          </div>       
+
           <div className="flex justify-between gap-28 mt-6">
             <button
               onClick={onClose}

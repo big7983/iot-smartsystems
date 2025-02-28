@@ -1,5 +1,4 @@
 import ProfileInput from "@/components/Inputs";
-import Selects from "@/components/Selects";
 import { ChangeEvent } from "react";
 
 // Step2.tsx
@@ -11,7 +10,6 @@ interface Step2Props {
 }
 
 const Step2 = ({ formData, handleInputChange }: Step2Props) => {
-
   const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (!/^\d*$/.test(value)) {
@@ -103,19 +101,34 @@ const Step2 = ({ formData, handleInputChange }: Step2Props) => {
           names="teleiphone"
           editable={true}
         />
-        <Selects
-          values={formData.blood_group}
-          onChanges={handleInputChange}
-          names="blood_group"
-          title="Blood Type (กรุ๊ปเลือด)"
-          options={["A", "B", "AB", "O"]}
-        />
         <div>
-          <label className="text-sm text-black block mb-1">PIN สำหรับ NFC</label>
+          <label className="text-sm text-black block mb-1">
+            Blood Type (กรุ๊ปเลือด)
+          </label>
+          <select
+            name="blood_group"
+            value={formData.blood_group}
+            onChange={handleInputChange}
+            className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"
+          >
+            <option value="" disabled>
+              Blood Type (กรุ๊ปเลือด)
+            </option>
+            {["A", "B", "AB", "O"].map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-sm text-black block mb-1">
+            PIN สำหรับ NFC
+          </label>
           <input
             name={"pin"}
             value={formData.pin}
-            onChange={handlePinChange} 
+            onChange={handlePinChange}
             maxLength={6}
             placeholder="PIN"
             className="w-full text-sm rounded border border-gray-200 border-stroke bg-white px-5 py-3 outline-none text-black transition focus:border-primary active:border-primary disabled:bg-gray-100"

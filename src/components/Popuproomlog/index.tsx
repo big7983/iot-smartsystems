@@ -103,14 +103,14 @@ export default function Index({ chooseroom, onClose }: PopupusermanageProps) {
 
   const filteredData = (data: any[]) => {
     return data.filter((item) => {
-      const formattedDate = formatDate(new Date(item.entry_time)); // ✅ แปลงเป็น DD/MM/YYYY
+      const formattedDate = formatDate(new Date(item.entry_time)); 
   
       const dateMatch =
         !selectedDate || formattedDate === formatDate(selectedDate);
       const textMatch =
         item.first_name?.toLowerCase().includes(searchText) ||
         item.student_id?.toString().includes(searchText) || 
-        formattedDate.includes(searchText); // ✅ ค้นหาวันที่ในฟอร์แมต DD/MM/YYYY
+        formattedDate.includes(searchText); 
   
       const roomMatch =
         !chooseroom || item.room_id?.toLowerCase() === chooseroom.toLowerCase();

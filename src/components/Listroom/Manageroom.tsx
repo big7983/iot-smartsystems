@@ -40,7 +40,7 @@ export default function Manageroom({
 
     const client = mqtt.connect("ws://192.168.70.8:9001/mqtt");
     const topic =
-      roomName === "B316" ? "DoorIn1" : roomName === "B317" ? "DoorIn2" : "";
+      roomName === "B316" ? "DoorIn2" : roomName === "B317" ? "DoorIn1" : "";
 
     const message = "pass";
 

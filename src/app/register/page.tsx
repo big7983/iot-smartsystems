@@ -49,8 +49,42 @@ export default function Page() {
     });
   };
 
+  const validateForm = () => {
+    const requiredFields = [
+      "id_card",
+      "student_id",
+      "first_name",
+      "last_name",
+      "nick_name",
+      "email",
+      "password",
+      "token_id",
+      "position",
+      "teleiphone",
+      "date_of_birth",
+      "blood_group",
+      "guardian_fname",
+      "guardian_lname",
+      "guardian_phone",
+      "pin",
+      "photograph"
+    ];
+  
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]?.trim()) {
+        toast.error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+        return false;
+      }
+    }
+    return true;
+  };
+  
+
   const handleSaveData = async () => {
     setLoading(true); // เริ่มโหลด
+    if (!validateForm()) return; // ถ้ายังกรอกไม่ครบ ให้หยุดทำงาน
+
+    console.log("token : 111" , tokenuser)
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user_info`,
@@ -70,7 +104,11 @@ export default function Page() {
       router.back()
 
     } catch (error: any) {
-      toast.error(`เกิดข้อผิดพลาดในการบันทึกข้อมูล`);
+      if (error.response?.status === 413) {
+        toast.error("ไฟล์รูปมีขนาดเกิน 100KB");
+      } else {
+        toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      }
       console.log(error);
       console.log("fd", formData);
     } finally {
