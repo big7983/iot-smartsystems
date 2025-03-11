@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, Toaster } from "react-hot-toast";
@@ -192,7 +191,7 @@ export default function Page() {
           <button
             disabled={loading}
             type="submit"
-            className="text-base  w-full flex justify-center items-center bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary disabled:bg-slate-400"
+            className="text-base mt-7 my-10 w-full flex justify-center items-center bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary disabled:bg-slate-400"
           >
             {loading ? (
               <div className="h-6 w-6 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
@@ -200,20 +199,9 @@ export default function Page() {
               "Sign in"
             )}
           </button>
-          <div className="my-4 flex items-center">
-            <div className="flex-1 h-px bg-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">OR</span>
-            <div className="flex-1 h-px bg-gray-300"></div>
-          </div>
+          
         </form>
-        <button
-          disabled={loading}
-          className="text-base  w-full flex justify-center items-center bg-primary bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary disabled:bg-slate-400"
-        >
-          <Link className="w-full h-full" href="/register">
-            Register
-          </Link>
-        </button>
+        
       </div>
       <ProfilePopup
         isOpen={popupOpen}
